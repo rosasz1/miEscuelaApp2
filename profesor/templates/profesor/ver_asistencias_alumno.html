@@ -1,0 +1,54 @@
+{% extends "base_dashboard.html" %}
+
+{% block panel_title %}Ver Asistencias de un Alumno{% endblock %}
+
+{% block sidebar %}
+<h5 class="text-center">Menú Profesor</h5>
+<a href="{{ url_for('profesor.dashboard') }}">Inicio</a>
+<a href="{{ url_for('profesor.registrar_asistencia') }}">Registrar asistencia</a>
+<a href="{{ url_for('profesor.modificar_asistencia') }}">Modificar asistencia</a>
+<a href="{{ url_for('auth.logout') }}">Cerrar sesión</a>
+{% endblock %}
+
+{% block content %}
+<h4>Consultar asistencias de un alumno</h4>
+<form method="POST" action="{{ url_for('profesor.ver_asistencias') }}">
+  <div class="form-group">
+    <label for="dni_alumno">DNI del alumno:</label>
+    <input type="text" name="dni_alumno" id="dni_alumno" required class="form-control">
+  </div>
+  <button type="submit" class="btn btn-primary mt-3">Buscar</button>
+</form>
+
+{% if asistencias is not none %}
+  <hr>
+  <h5>Asistencias encontradas:</h5>
+  {% if asistencias %}
+    <table class="table table-bordered table-hover">
+      <thead class="table-light">
+        <tr>
+          <th>Materia</th>
+          <th>Fecha</th>
+          <th>Presente</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for registro in asistencias %}
+          {% set partes = registro.split(' - ') %}
+          <tr>
+            <td>{{ partes[0] }}</td>
+            <td>{{ partes[1] }}</td>
+            <td>{{ partes[2] }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>No se encontraron asistencias para ese alumno.</p>
+  {% endif %}
+{% endif %}
+
+<div class="mt-3">
+  <a href="{{ url_for('profesor.dashboard') }}" class="btn btn-secondary">&larr; Volver al panel</a>
+</div>
+{% endblock %}

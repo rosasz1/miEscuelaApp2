@@ -1,0 +1,59 @@
+{% extends "base_dashboard.html" %}
+
+{% block title %}Crear Examen{% endblock %}
+
+{% block panel_title %}Registrar Examen{% endblock %}
+
+{% block sidebar %}
+<h5 class="text-center">Menú profesor</h5>
+<a href="{{ url_for('profesor.dashboard') }}">Inicio</a>
+<a href="{{ url_for('auth.logout') }}">Cerrar sesión</a>
+{% endblock %}
+
+{% block content %}
+<h4 class="mb-4">📘 Crear nuevo examen</h4>
+
+<form method="POST" class="card p-4" style="max-width: 600px;">
+  <div class="mb-3">
+    <label for="curso_id" class="form-label">Curso</label>
+    <select name="curso_id" id="curso_id" class="form-select" onchange="this.form.submit()" required>
+      <option disabled selected value="">Seleccioná un curso</option>
+      {% for cid, nombre in cursos %}
+        <option value="{{ cid }}" {% if request.form.curso_id == cid|string %}selected{% endif %}>{{ nombre }}</option>
+      {% endfor %}
+    </select>
+  </div>
+
+  {% if horarios_disponibles %}
+  <div class="mb-3">
+    <label for="materia_id" class="form-label">Materia</label>
+    <select name="materia_id" id="materia_id" class="form-select" required>
+      {% for mid, nombre in materias %}
+        <option value="{{ mid }}">{{ nombre }}</option>
+      {% endfor %}
+    </select>
+  </div>
+
+  <div class="mb-3">
+    <label for="fecha" class="form-label">Fecha</label>
+    <input type="date" name="fecha" id="fecha" class="form-control" required>
+  </div>
+
+  <div class="mb-3">
+    <label for="hora" class="form-label">Hora</label>
+    <select name="hora" id="hora" class="form-select" required>
+      {% for h in horarios_disponibles %}
+        <option value="{{ h[2].strftime('%H:%M') }}">{{ h[1] }} - {{ h[2].strftime('%H:%M') }} a {{ h[3].strftime('%H:%M') }}</option>
+      {% endfor %}
+    </select>
+  </div>
+
+  <div class="mb-3">
+    <label for="titulo" class="form-label">Título o descripción</label>
+    <input type="text" name="titulo" id="titulo" class="form-control">
+  </div>
+
+  <button type="submit" class="btn btn-success">Guardar Examen</button>
+  {% endif %}
+</form>
+{% endblock %}

@@ -1,0 +1,32 @@
+{% extends "base_dashboard.html" %}
+
+{% block title %}Panel Admin{% endblock %}
+
+{% block panel_header %}
+<a href="{{ url_for('admin.dashboard') }}" class="text-white text-decoration-none">Panel Admin</a>
+{% endblock %}
+
+{% block panel_title %}Bienvenido, {{ nombre }}{% endblock %}
+
+{% block sidebar %}
+  {% include 'admin/sidebar_admin.html' %}
+{% endblock %}
+
+{% block content %}
+<div class="text-center">
+  <h4 class="mb-4">👋 ¡Hola {{ nombre }}!</h4>
+  <p>Usá el menú lateral o los accesos rápidos para gestionar el sistema.</p>
+</div>
+
+<div class="row mt-5 justify-content-center">
+  <div class="col-md-3 mb-3">
+    <a href="{{ url_for('admin.ver_materias') }}" class="btn btn-outline-primary w-100">📚 Materias</a>
+  </div>
+  <div class="col-md-3 mb-3">
+    <a href="{{ url_for('admin.crear_usuario') }}" class="btn btn-outline-success w-100">👤 Crear Usuario</a>
+  </div>
+  <div class="col-md-3 mb-3">
+    <a href="{{ url_for('admin.crear_examen') }}" class="btn btn-outline-warning w-100">📝 Registrar Examen</a>
+  </div>
+</div>
+{% endblock %}

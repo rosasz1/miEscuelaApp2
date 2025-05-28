@@ -1,0 +1,43 @@
+{% extends "base_dashboard.html" %}
+
+{% block title %}Modificar Asistencia{% endblock %}
+
+{% block panel_title %}Modificar Asistencia{% endblock %}
+{% block panel_header %}
+  <a href="{{ url_for('admin.dashboard') }}" class="text-white text-decoration-none">Panel Admin</a>
+{% endblock %}
+
+
+{% block content %}
+<form method="POST" action="{{ url_for('admin.modificar_asistencia') }}">
+  <div class="form-group">
+    <label for="dni_alumno">DNI del alumno:</label>
+    <input type="text" class="form-control" id="dni_alumno" name="dni_alumno" required>
+  </div>
+
+  <div class="form-group mt-3">
+    <label for="materia_id">Materia:</label>
+    <select class="form-select" id="materia_id" name="materia_id" required>
+      {% for id, nombre in materias %}
+        <option value="{{ id }}">{{ nombre }}</option>
+      {% endfor %}
+    </select>
+  </div>
+
+  <div class="form-group mt-3">
+    <label>Asistencia:</label><br>
+    <div class="form-check form-check-inline">
+      <input class="form-check-input" type="radio" name="presente" id="presente1" value="true" checked>
+      <label class="form-check-label" for="presente1">Presente</label>
+    </div>
+    <div class="form-check form-check-inline">
+      <input class="form-check-input" type="radio" name="presente" id="presente0" value="false">
+      <label class="form-check-label" for="presente0">Ausente</label>
+    </div>
+  </div>
+
+  <button type="submit" class="btn btn-primary mt-4">Guardar cambios</button>
+  <a href="{{ url_for('admin.dashboard') }}" class="btn btn-secondary mt-4 ms-2">Volver</a>
+</form>
+{% endblock %}
+

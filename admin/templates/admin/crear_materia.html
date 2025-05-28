@@ -1,0 +1,59 @@
+{% extends "base_dashboard.html" %}
+
+{% block panel_title %}Registrar Nueva Materia{% endblock %}
+
+{% block panel_header %}
+  <a href="{{ url_for('admin.dashboard') }}" class="text-white text-decoration-none">Panel Admin</a>
+{% endblock %}
+
+{% block content %}
+<h4>Registrar nueva materia</h4>
+
+<form method="POST" action="{{ url_for('admin.crear_materia') }}">
+  <div class="form-group">
+    <label for="nombre">Nombre de la materia:</label>
+    <input type="text" name="nombre" id="nombre" class="form-control" required>
+  </div>
+
+  <div class="form-group mt-3">
+    <label for="anio">Año académico:</label>
+    <select id="anio" class="form-select" required onchange="filtrarCursos()">
+      <option value="">Seleccionar año</option>
+      {% for id, nombre in anios %}
+        <option value="{{ id }}">{{ nombre }}</option>
+      {% endfor %}
+    </select>
+  </div>
+
+  <div class="form-group mt-3">
+    <label for="curso_id">Curso:</label>
+    <select name="curso_id" id="curso_id" class="form-select" required>
+      <option value="">Seleccionar curso</option>
+      {% for id, nombre, anio_id in cursos %}
+        <option value="{{ id }}" data-anio="{{ anio_id }}">{{ nombre }}</option>
+      {% endfor %}
+    </select>
+  </div>
+
+  <button type="submit" class="btn btn-primary mt-4">Registrar materia</button>
+</form>
+
+<div class="mt-4">
+  <a href="{{ url_for('admin.dashboard') }}" class="btn btn-secondary">&larr; Volver al panel</a>
+</div>
+
+<script>
+function filtrarCursos() {
+  const anioSeleccionado = document.getElementById("anio").value;
+  const cursoSelect = document.getElementById("curso_id");
+  const opciones = cursoSelect.querySelectorAll("option");
+
+  opciones.forEach(option => {
+    if (!option.value) return;
+    option.style.display = (option.dataset.anio === anioSeleccionado) ? 'block' : 'none';
+  });
+
+  cursoSelect.value = "";
+}
+</script>
+{% endblock %}

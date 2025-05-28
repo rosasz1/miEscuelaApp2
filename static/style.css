@@ -1,0 +1,147 @@
+/* Fuente general y reset */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #f5f5f5;
+  color: #212121;
+}
+
+/* Login */
+.login-container {
+  background-color: #ffffff;
+  padding: 2.5rem;
+  border-radius: 20px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  max-width: 400px;
+  width: 100%;
+  text-align: center;
+  margin: auto;
+}
+.login-container h1 {
+  color: #1976D2;
+}
+.login-container p.sub {
+  color: #555;
+}
+.form-group {
+  text-align: left;
+  margin-bottom: 1.2rem;
+}
+.form-group label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 0.3rem;
+  color: #333;
+}
+.form-group input {
+  width: 100%;
+  padding: 0.7rem;
+  border-radius: 10px;
+  border: 1px solid #90caf9;
+  font-size: 1rem;
+  background-color: #ffffff;
+}
+.login-button {
+  background-color: #1976D2;
+  color: #fff;
+  padding: 0.7rem 1.5rem;
+  border: none;
+  border-radius: 10px;
+  font-weight: bold;
+  cursor: pointer;
+}
+.login-button:hover {
+  background-color: #1565c0;
+}
+
+/* Paneles */
+.sidebar {
+  background-color: #1976D2;
+  color: white;
+  height: 100vh;
+  padding: 1rem;
+}
+.sidebar h5 {
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+.sidebar a {
+  color: white;
+  text-decoration: none;
+  display: block;
+  margin: 0.5rem 0;
+}
+.sidebar a:hover {
+  text-decoration: underline;
+}
+
+.content-main {
+  background-color: #ffffff;
+  padding: 2rem;
+  min-height: 100vh;
+}
+
+.right-panel {
+  background-color: #E3F2FD;
+  padding: 2rem;
+  height: 100vh;
+  overflow-y: auto;
+}
+.right-panel h5 {
+  font-weight: bold;
+  margin-bottom: 1rem;
+  color: #0D47A1;
+}
+.right-panel ul {
+  padding-left: 1.2rem;
+  margin-bottom: 2rem;
+}
+.right-panel li {
+  margin-bottom: 0.4rem;
+}
+
+/* Pie inferior */
+.lower-section {
+  background-color: #BBDEFB;
+  padding: 1rem;
+  text-align: center;
+}
+
+/* Botones genéricos */
+.btn-primary {
+  background-color: #1976D2;
+  border: none;
+}
+.btn-primary:hover {
+  background-color: #1565c0;
+}
+
+/* Estilos para acordeón desplegable */
+.accordion-body {
+  background-color: white;
+}
+
+.accordion-body a {
+  color: #212121;
+  text-decoration: none;
+  padding: 0.4rem 0.5rem;
+  display: block;
+  border-radius: 8px;
+}
+
+.accordion-body a:hover {
+  background-color: #e3f2fd;
+  color: #1976D2;
+}
+
+/* Centrado vertical del login */
+body.login-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+
+}

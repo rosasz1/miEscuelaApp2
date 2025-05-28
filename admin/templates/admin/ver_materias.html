@@ -1,0 +1,70 @@
+
+{% extends "base_dashboard.html" %}
+
+{% block panel_title %}Ver Materias{% endblock %}
+
+{% block content %}
+<h4 class="mb-4">Listado de Materias</h4>
+
+<form method="GET" class="row g-3 mb-4">
+  <div class="col-md-4">
+    <label for="anio">Año académico:</label>
+    <select id="anio" class="form-select" onchange="filtrarCursos()">
+      <option value="">Seleccionar año</option>
+      {% for id, nombre in anios %}
+        <option value="{{ id }}">{{ nombre }}</option>
+      {% endfor %}
+    </select>
+  </div>
+
+  <div class="col-md-4">
+    <label for="curso">Curso:</label>
+    <select id="curso" class="form-select">
+      <option value="">Seleccionar curso</option>
+      {% for id, nombre, anio_id in cursos %}
+        <option value="{{ id }}" data-anio="{{ anio_id }}">{{ nombre }}</option>
+      {% endfor %}
+    </select>
+  </div>
+</form>
+
+<div class="table-responsive">
+  {% for anio, cursos in estructura.items() %}
+    <h5 class="mt-4">{{ anio }}</h5>
+    {% for curso, materias in cursos.items() %}
+      <h6 class="text-primary">{{ curso }}</h6>
+      <table class="table table-bordered table-striped">
+        <thead>
+          <tr>
+            <th>Nombre</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for materia in materias %}
+          <tr>
+            <td>{{ materia.nombre }}</td>
+            <td>
+              <a href="{{ url_for('admin.editar_materia', materia_id=materia.id) }}" class="btn btn-sm btn-warning">Editar</a>
+              <a href="{{ url_for('admin.eliminar_materia', id=materia.id) }}" class="btn btn-sm btn-danger">Eliminar</a>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% endfor %}
+  {% endfor %}
+</div>
+
+<script>
+function filtrarCursos() {
+  const anio = document.getElementById("anio").value;
+  const cursos = document.querySelectorAll("#curso option");
+  cursos.forEach(op => {
+    if (!op.value) return;
+    op.style.display = (op.dataset.anio === anio) ? 'block' : 'none';
+  });
+  document.getElementById("curso").value = "";
+}
+</script>
+{% endblock %}

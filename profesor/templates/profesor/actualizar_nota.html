@@ -1,0 +1,35 @@
+{% extends "base_dashboard.html" %}
+
+{% block panel_title %}Actualizar Nota{% endblock %}
+
+{% block sidebar %}
+<h5 class="text-center">Menú Profesor</h5>
+<a href="{{ url_for('profesor.dashboard') }}">Inicio</a>
+<a href="{{ url_for('profesor.ver_notas') }}">Ver notas</a>
+<a href="{{ url_for('profesor.agregar_nota') }}">Agregar nota</a>
+<a href="{{ url_for('auth.logout') }}">Cerrar sesión</a>
+{% endblock %}
+
+{% block content %}
+<h4>Actualizar nota de un alumno</h4>
+<form method="POST" action="{{ url_for('profesor.actualizar_nota') }}">
+  <div class="form-group">
+    <label for="dni_alumno">DNI del alumno:</label>
+    <input type="text" name="dni_alumno" id="dni_alumno" required class="form-control">
+  </div>
+  <div class="form-group">
+    <label for="materia_id">ID de la materia:</label>
+    <input type="number" name="materia_id" id="materia_id" required class="form-control">
+  </div>
+  <div class="form-group">
+    <label for="nueva_nota">Nueva nota:</label>
+    <input type="number" step="0.01" name="nueva_nota" id="nueva_nota" required class="form-control">
+  </div>
+  <button type="submit" class="btn btn-primary mt-3">Actualizar nota</button>
+</form>
+
+<div class="mt-3">
+  <a href="{{ url_for('profesor.dashboard') }}" class="btn btn-secondary">&larr; Volver al panel</a>
+</div>
+{% endblock %}
+

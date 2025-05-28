@@ -1,0 +1,41 @@
+{% extends "base_dashboard.html" %}
+
+{% block panel_title %}
+  Mis Asistencias
+{% endblock %}
+
+{% block sidebar %}
+  <h5 class="text-center">Menú Alumno</h5>
+  <a href="{{ url_for('alumno.dashboard') }}">Inicio</a>
+  <a href="{{ url_for('alumno.ver_notas') }}">Ver notas</a>
+  <a href="{{ url_for('alumno.ver_asistencias') }}">Ver asistencias</a>
+  <a href="{{ url_for('auth.logout') }}">Cerrar sesión</a>
+{% endblock %}
+
+{% block content %}
+  <h4>Listado de asistencias</h4>
+  {% if asistencias %}
+    <table class="table table-bordered table-hover">
+      <thead class="table-light">
+        <tr>
+          <th>Materia</th>
+          <th>Fecha</th>
+          <th>Presente</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for registro in asistencias %}
+          {% set partes = registro.split(' - ') %}
+          <tr>
+            <td>{{ partes[0] }}</td>
+            <td>{{ partes[1] }}</td>
+            <td>{{ partes[2] }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>No se encontraron registros de asistencia.</p>
+  {% endif %}
+{% endblock %}
+

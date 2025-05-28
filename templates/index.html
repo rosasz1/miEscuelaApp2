@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EduApp</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>EduApp</h1>
+    <form id="loginForm">
+      <input type="text" id="username" placeholder="Usuario" required />
+      <input type="password" id="password" placeholder="Contraseña" required />
+      <button type="submit">Iniciar sesión</button>
+    </form>
+    <p id="error-message"></p>
+  </div>
+
+  <script>
+    document.getElementById("loginForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      const username = document.getElementById("username").value.trim();
+      const password = document.getElementById("password").value;
+
+      const usuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
+
+      const usuarioValido = usuarios.find((u) => u.username === username && u.password === password);
+
+      if (!usuarioValido) {
+        alert("Usuario o contraseña incorrectos.");
+        return;
+      }
+
+      // Guardar sesión
+      localStorage.setItem("usuarioLogueado", JSON.stringify(usuarioValido));
+      window.location.href = "bienvenida.html";
+    });
+  </script>
+</body>
+</html>

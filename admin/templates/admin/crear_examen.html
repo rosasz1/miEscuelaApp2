@@ -1,0 +1,59 @@
+{% extends "base_dashboard.html" %}
+
+{% block title %}Crear Examen{% endblock %}
+{% block panel_title %}Crear nuevo examen{% endblock %}
+{% block panel_header %}
+  <a href="{{ url_for('admin.dashboard') }}" class="text-white text-decoration-none">Panel Admin</a>
+{% endblock %}
+
+{% block content %}
+<h4 class="mb-4">📘 Crear nuevo examen</h4>
+<form method="POST" class="card p-4" style="max-width: 600px;">
+  <div class="mb-3">
+    <label for="curso_id" class="form-label">Curso</label>
+    <select name="curso_id" id="curso_id" class="form-select" onchange="this.form.submit()" required>
+      <option disabled selected value="">Seleccioná un curso</option>
+      {% for curso in cursos %}
+        <option value="{{ curso[0] }}" {% if request.form.curso_id == curso[0]|string %}selected{% endif %}>{{ curso[1] }}</option>
+      {% endfor %}
+    </select>
+  </div>
+
+  {% if materia_horarios %}
+  <div class="mb-3">
+    <label for="materia_id" class="form-label">Materia</label>
+    <select name="materia_id" id="materia_id" class="form-select" onchange="this.form.submit()" required>
+      <option disabled selected value="">Seleccioná una materia</option>
+      {% for materia in materias %}
+        <option value="{{ materia[0] }}" {% if request.form.materia_id == materia[0]|string %}selected{% endif %}>{{ materia[1] }}</option>
+      {% endfor %}
+    </select>
+  </div>
+
+  {% if request.form.materia_id %}
+  <div class="mb-3">
+    <label for="fecha" class="form-label">Fecha</label>
+    <input type="date" name="fecha" id="fecha" class="form-control" required>
+  </div>
+
+  <div class="mb-3">
+    <label for="hora" class="form-label">Hora</label>
+    <select name="hora" id="hora" class="form-select" required>
+      {% set materia_id = request.form.materia_id | int %}
+      {% for h in materia_horarios[materia_id] %}
+        <option value="{{ h[1] }}">{{ h[0] }} - {{ h[1] }} a {{ h[2] }}</option>
+      {% endfor %}
+    </select>
+  </div>
+
+  <div class="mb-3">
+    <label for="titulo" class="form-label">Título o descripción</label>
+    <input type="text" name="titulo" id="titulo" class="form-control">
+  </div>
+
+  <button type="submit" class="btn btn-success">Guardar Examen</button>
+  {% endif %}
+  {% endif %}
+</form>
+{% endblock %}
+

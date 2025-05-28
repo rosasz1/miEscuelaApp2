@@ -1,0 +1,28 @@
+{% extends "base_dashboard.html" %}
+
+{% block panel_title %}Asignar Profesor a Materia{% endblock %}
+
+{% block panel_header %}
+  <a href="{{ url_for('admin.dashboard') }}" class="text-white text-decoration-none">Panel Admin</a>
+{% endblock %}
+
+
+{% block content %}
+<h4>Asignar profesor a una materia</h4>
+<form method="POST" action="{{ url_for('admin.asignar_profesor') }}">
+  <div class="form-group">
+    <label for="profesor_dni">DNI del profesor:</label>
+    <input type="text" name="profesor_dni" id="profesor_dni" required class="form-control">
+  </div>
+  <div class="form-group">
+    <label for="materia_id">ID de la materia:</label>
+    <input type="text" name="materia_id" id="materia_id" required class="form-control">
+  </div>
+  <button type="submit" class="btn btn-primary mt-3">Asignar profesor</button>
+</form>
+
+<div class="mt-3">
+  <a href="{{ url_for('admin.dashboard') }}" class="btn btn-secondary">&larr; Volver al panel</a>
+</div>
+{% endblock %}
+

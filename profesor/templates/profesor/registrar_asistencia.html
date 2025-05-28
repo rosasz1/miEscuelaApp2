@@ -1,0 +1,38 @@
+{% extends "base_dashboard.html" %}
+
+{% block panel_title %}Registrar Asistencia{% endblock %}
+
+{% block sidebar %}
+<h5 class="text-center">Menú Profesor</h5>
+<a href="{{ url_for('profesor.dashboard') }}">Inicio</a>
+<a href="{{ url_for('profesor.ver_asistencias') }}">Ver asistencias</a>
+<a href="{{ url_for('profesor.modificar_asistencia') }}">Modificar asistencia</a>
+<a href="{{ url_for('auth.logout') }}">Cerrar sesión</a>
+{% endblock %}
+
+{% block content %}
+<h4>Registrar asistencia para un alumno</h4>
+<form method="POST" action="{{ url_for('profesor.registrar_asistencia') }}">
+  <div class="form-group">
+    <label for="dni_alumno">DNI del alumno:</label>
+    <input type="text" name="dni_alumno" id="dni_alumno" required class="form-control">
+  </div>
+  <div class="form-group">
+    <label for="materia_id">ID de la materia:</label>
+    <input type="text" name="materia_id" id="materia_id" required class="form-control">
+  </div>
+  <div class="form-group">
+    <label for="presente">¿Presente?</label>
+    <select name="presente" id="presente" class="form-select">
+      <option value="true">Sí</option>
+      <option value="false">No</option>
+    </select>
+  </div>
+  <button type="submit" class="btn btn-primary mt-3">Registrar asistencia</button>
+</form>
+
+<div class="mt-3">
+  <a href="{{ url_for('profesor.dashboard') }}" class="btn btn-secondary">&larr; Volver al panel</a>
+</div>
+{% endblock %}
+

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}EduApp{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <header>
+    <nav>
+      <ul>
+        {% if session.get('usuario') %}
+          {% if session['usuario']['rol'] == 'admin' %}
+            <li><a href="{{ url_for('admin.dashboard') }}">Inicio</a></li>
+          {% elif session['usuario']['rol'] == 'profesor' %}
+            <li><a href="{{ url_for('profesor.dashboard') }}">Inicio</a></li>
+          {% elif session['usuario']['rol'] == 'alumno' %}
+            <li><a href="{{ url_for('alumno.dashboard') }}">Inicio</a></li>
+          {% endif %}
+          <li><a href="{{ url_for('auth.logout') }}">Cerrar sesión</a></li>
+        {% endif %}
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer>
+    <p>&copy; 2025 EduApp</p>
+  </footer>
+</body>
+</html>

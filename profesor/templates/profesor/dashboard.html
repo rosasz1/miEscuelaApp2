@@ -1,0 +1,61 @@
+{% extends "base_dashboard.html" %}
+
+{% block title %}Panel Profesor{% endblock %}
+
+{% block panel_title %}Bienvenido, {{ nombre }}{% endblock %}
+
+{% block sidebar %}
+<h5 class="text-center">Panel Profesor</h5>
+
+<div class="accordion" id="sidebarAccordionProfesor">
+  <!-- Notas -->
+  <div class="accordion-item">
+    <h2 class="accordion-header" id="headingNotas">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseNotas">
+        Notas
+      </button>
+    </h2>
+    <div id="collapseNotas" class="accordion-collapse collapse">
+      <div class="accordion-body p-2">
+        <a href="{{ url_for('profesor.ver_notas') }}" class="d-block mb-1">Ver notas</a>
+        <a href="{{ url_for('profesor.agregar_nota') }}" class="d-block mb-1">Agregar nota</a>
+        <a href="{{ url_for('profesor.actualizar_nota') }}" class="d-block mb-1">Actualizar nota</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Asistencias -->
+  <div class="accordion-item mt-2">
+    <h2 class="accordion-header" id="headingAsistencias">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseAsistencias">
+        Asistencias
+      </button>
+    </h2>
+    <div id="collapseAsistencias" class="accordion-collapse collapse">
+      <div class="accordion-body p-2">
+        <a href="{{ url_for('profesor.ver_asistencias') }}" class="d-block mb-1">Ver asistencias</a>
+        <a href="{{ url_for('profesor.registrar_asistencia') }}" class="d-block mb-1">Registrar asistencia</a>
+        <a href="{{ url_for('profesor.modificar_asistencia') }}" class="d-block mb-1">Modificar asistencia</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Exámenes -->
+  <div class="accordion-item mt-2">
+    <h2 class="accordion-header" id="headingExamenes">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExamenes">
+        Exámenes
+      </button>
+    </h2>
+    <div id="collapseExamenes" class="accordion-collapse collapse">
+      <div class="accordion-body p-2">
+        <a href="{{ url_for('profesor.crear_examen') }}" class="d-block mb-1">Registrar examen</a>
+        <a href="{{ url_for('profesor.ver_examenes') }}" class="d-block mb-1">Ver mis exámenes</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr>
+<a href="{{ url_for('auth.logout') }}" class="d-block mt-3 text-danger">Cerrar sesión</a>
+{% endblock %}

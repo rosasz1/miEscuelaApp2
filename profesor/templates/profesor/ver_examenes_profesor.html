@@ -1,0 +1,41 @@
+{% extends "base_dashboard.html" %}
+
+{% block title %}Mis Exámenes{% endblock %}
+{% block panel_title %}Exámenes Registrados{% endblock %}
+
+{% block sidebar %}
+<h5 class="text-center">Menú profesor</h5>
+<a href="{{ url_for('profesor.dashboard') }}">Inicio</a>
+<a href="{{ url_for('auth.logout') }}">Cerrar sesión</a>
+{% endblock %}
+
+{% block content %}
+<h4 class="mb-4">📝 Lista de exámenes que creaste</h4>
+
+{% if examenes %}
+<table class="table table-bordered table-striped">
+  <thead>
+    <tr>
+      <th>Materia</th>
+      <th>Curso</th>
+      <th>Fecha</th>
+      <th>Hora</th>
+      <th>Título</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for ex in examenes %}
+    <tr>
+      <td>{{ ex[0] }}</td>
+      <td>{{ ex[1] }}</td>
+      <td>{{ ex[2].strftime('%d/%m/%Y') }}</td>
+      <td>{{ ex[3].strftime('%H:%M') }}</td>
+      <td>{{ ex[4] or 'Sin título' }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<p class="text-muted">Todavía no registraste ningún examen.</p>
+{% endif %}
+{% endblock %}

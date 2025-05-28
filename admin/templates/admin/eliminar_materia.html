@@ -1,0 +1,17 @@
+{% extends "base_dashboard.html" %}
+
+{% block panel_title %}Eliminar Materia{% endblock %}
+
+{% block panel_header %}
+  <a href="{{ url_for('admin.dashboard') }}" class="text-white text-decoration-none">Panel Admin</a>
+{% endblock %}
+
+
+{% block content %}
+<h4>¿Seguro que querés eliminar la materia "{{ materia.nombre }}"?</h4>
+
+<form method="POST" action="{{ url_for('admin.eliminar_materia', id=materia.id) }}">
+  <button type="submit" class="btn btn-danger">Sí, eliminar</button>
+  <a href="{{ url_for('admin.ver_materias') }}" class="btn btn-secondary ms-2">Cancelar</a>
+</form>
+{% endblock %}

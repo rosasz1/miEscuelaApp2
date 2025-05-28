@@ -1,0 +1,31 @@
+<!-- bienvenida.html -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Bienvenido a EduApp</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h1 id="welcome-msg">Bienvenido</h1>
+    <button onclick="location.href='mis-cursos.html'">Mis Cursos</button>
+    <button onclick="location.href='perfil.html'">Perfil</button>
+    <button onclick="cerrarSesion()">Cerrar sesión</button>
+  </div>
+
+  <script>
+    const usuario = JSON.parse(localStorage.getItem("usuarioLogueado"));
+    if (!usuario) {
+      window.location.href = "index.html";
+    } else {
+      document.getElementById("welcome-msg").innerText = `Bienvenido, ${usuario.username}`;
+    }
+
+    function cerrarSesion() {
+      localStorage.removeItem("usuarioLogueado");
+      window.location.href = "index.html";
+    }
+  </script>
+</body>
+</html>

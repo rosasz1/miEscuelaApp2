@@ -1,0 +1,89 @@
+{% extends "base_dashboard.html" %}
+
+{% block panel_title %}Gestión de Horarios{% endblock %}
+
+{% block panel_header %}
+  <a href="{{ url_for('admin.dashboard') }}" class="text-white text-decoration-none">Panel Admin</a>
+{% endblock %}
+
+
+{% block content %}
+<h4>Registrar nuevo horario</h4>
+<form method="POST" action="{{ url_for('admin.gestionar_horarios') }}">
+  <div class="form-group">
+    <label for="curso_id">Curso:</label>
+    <select name="curso_id" id="curso_id" class="form-select" required>
+      {% for id, nombre in cursos %}
+        <option value="{{ id }}">{{ nombre }}</option>
+      {% endfor %}
+    </select>
+  </div>
+
+  <div class="form-group mt-3">
+    <label for="materia_id">Materia:</label>
+    <select name="materia_id" id="materia_id" class="form-select" required>
+      {% for id, nombre in materias %}
+        <option value="{{ id }}">{{ nombre }}</option>
+      {% endfor %}
+    </select>
+  </div>
+
+  <div class="form-group mt-3">
+    <label for="dia">Día de la semana:</label>
+    <select name="dia" id="dia" class="form-select" required>
+      <option>Lunes</option>
+      <option>Martes</option>
+      <option>Miércoles</option>
+      <option>Jueves</option>
+      <option>Viernes</option>
+    </select>
+  </div>
+
+  <div class="form-group mt-3">
+    <label for="hora_inicio">Hora de inicio:</label>
+    <input type="time" name="hora_inicio" id="hora_inicio" class="form-control" required>
+  </div>
+
+  <div class="form-group mt-3">
+    <label for="hora_fin">Hora de fin:</label>
+    <input type="time" name="hora_fin" id="hora_fin" class="form-control" required>
+  </div>
+
+  <button type="submit" class="btn btn-primary mt-4">Registrar horario</button>
+</form>
+
+<hr class="my-5">
+
+<h4>Horarios registrados</h4>
+{% if horarios %}
+  <table class="table table-bordered table-hover">
+    <thead class="table-light">
+      <tr>
+        <th>Curso</th>
+        <th>Materia</th>
+        <th>Día</th>
+        <th>Hora inicio</th>
+        <th>Hora fin</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for curso, materia, dia, inicio, fin in horarios %}
+        <tr>
+          <td>{{ curso }}</td>
+          <td>{{ materia }}</td>
+          <td>{{ dia }}</td>
+          <td>{{ inicio }}</td>
+          <td>{{ fin }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% else %}
+  <p>No hay horarios cargados todavía.</p>
+{% endif %}
+
+<div class="mt-4">
+  <a href="{{ url_for('admin.dashboard') }}" class="btn btn-secondary">&larr; Volver al panel</a>
+</div>
+{% endblock %}
+
