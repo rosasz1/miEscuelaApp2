@@ -18,15 +18,71 @@ def validar_rol(roles):
         roles = [roles]
     return session['usuario']['rol'] in roles
 
+
+def registrar_accion(descripcion, tipo):
+    try:
+        with Conexion.obtener_conexion() as conn:
+            with conn.cursor() as cursor:
+                cursor.execute(
+                    "INSERT INTO acciones_recientes (descripcion, tipo) VALUES (%s, %s)",
+                    (descripcion, tipo)
+                )
+                conn.commit()
+    except Exception as e:
+        print(f"Error al registrar acción: {e}")
+
 def redireccion_no_autorizado():
     flash("No autorizado")
     return redirect(url_for('auth.login'))
 
-@admin_bp.route('/dashboard')
+@admin_bp.route("/dashboard")
 def dashboard():
     if not validar_rol('admin'):
         return redireccion_no_autorizado()
-    return render_template('admin/dashboard.html')
+
+    total_alumnos = 0
+    total_profesores = 0
+    total_materias = 0
+    total_examenes = 0
+    acciones = []
+
+    try:
+        with Conexion.obtener_conexion() as conn:
+            with conn.cursor() as cursor:
+                cursor.execute("SELECT COUNT(*) FROM usuarios WHERE rol = 'alumno'")
+                total_alumnos = cursor.fetchone()[0]
+
+                cursor.execute("SELECT COUNT(*) FROM usuarios WHERE rol = 'profesor'")
+                total_profesores = cursor.fetchone()[0]
+
+                cursor.execute("SELECT COUNT(*) FROM materias")
+                total_materias = cursor.fetchone()[0]
+
+                cursor.execute("""
+                    SELECT COUNT(*) FROM examenes
+                    WHERE fecha >= CURRENT_DATE AND fecha <= CURRENT_DATE + INTERVAL '6 days'
+                """)
+                total_examenes = cursor.fetchone()[0]
+
+                cursor.execute("""
+                    SELECT descripcion, tipo, fecha
+                    FROM acciones_recientes
+                    ORDER BY fecha DESC
+                    LIMIT 5
+                """)
+                acciones = cursor.fetchall()
+
+    except Exception as e:
+        print("🔥 Error al cargar datos del dashboard:", e)
+
+    return render_template("admin/dashboard.html",
+                           nombre=session['usuario']['nombre'],
+                           total_alumnos=total_alumnos,
+                           total_profesores=total_profesores,
+                           total_materias=total_materias,
+                           total_examenes=total_examenes,
+                           acciones=acciones)
+
 
 @admin_bp.route('/crear-usuario', methods=['GET', 'POST'])
 def crear_usuario():
@@ -40,6 +96,8 @@ def crear_usuario():
         rol = request.form['rol']
         password = request.form['password']
         resultado = UsuarioDAO.crear_usuario(dni, nombre, apellido, email, rol, password)
+        if resultado.get("ok", False):  # Asegurate que fue exitoso
+            registrar_accion(f"Se creó el usuario {nombre} {apellido} (DNI {dni}) con rol {rol}", "creacion")
         flash(resultado.get('mensaje', 'Error'))
         return redirect(url_for('admin.dashboard'))
     return render_template('admin/crear_usuario.html')
@@ -79,6 +137,14 @@ def asignar_profesor():
         profesor_dni = request.form['profesor_dni']
         materia_id = request.form['materia_id']
         resultado = UsuarioDAO.asignar_profesor_a_materia(materia_id, profesor_dni)
+        try:
+            with Conexion.obtener_conexion() as conn:
+                with conn.cursor() as cursor:
+                    cursor.execute("SELECT nombre FROM materias WHERE id = %s", (materia_id,))
+                    nombre_materia = cursor.fetchone()[0]
+                    registrar_accion(f"Profesor {profesor_dni} asignado a {nombre_materia}", "asignacion")
+        except Exception as e:
+            print("Error al registrar acción de asignación:", e)
         flash(resultado.get('mensaje', 'Error'))
         return redirect(url_for('admin.dashboard'))
     return render_template('admin/asignar_profesor.html')
@@ -131,19 +197,66 @@ def ver_asistencias():
 
 from backend.plan_academico import PlanAcademicoDAO
 
-@admin_bp.route('/ver-materias')
+@admin_bp.route("/ver-materias")
 def ver_materias():
     if not validar_rol('admin'):
         return redireccion_no_autorizado()
 
-    estructura = PlanAcademicoDAO.obtener_materias_estructuradas()
-    anios = PlanAcademicoDAO.obtener_anios()
-    cursos = PlanAcademicoDAO.obtener_cursos_con_anio()
-    return render_template("admin/ver_materias.html", estructura=estructura, anios=anios, cursos=cursos)
+    anio_id = request.args.get("anio_id")
+    curso_id = request.args.get("curso_id")
 
+    estructura = {}
+    cursos = []
+    anios = []
 
+    try:
+        anios = PlanAcademicoDAO.obtener_anios()
+        cursos = PlanAcademicoDAO.obtener_cursos_con_anio()
 
+        with Conexion.obtener_conexion() as conn:
+            with conn.cursor() as cursor:
+                query = """
+                    SELECT m.id, m.nombre, c.nombre, a.nombre
+                    FROM materias m
+                    JOIN cursos c ON m.curso_id = c.id
+                    JOIN anio a ON c.anio_id = a.id
+                """
+                params = []
 
+                if anio_id:
+                    query += " WHERE a.id = %s"
+                    params.append(anio_id)
+
+                if curso_id:
+                    if anio_id:
+                        query += " AND c.id = %s"
+                    else:
+                        query += " WHERE c.id = %s"
+                    params.append(curso_id)
+
+                query += " ORDER BY a.id, c.nombre, m.nombre"
+                cursor.execute(query, tuple(params))
+                datos = cursor.fetchall()
+
+                for materia_id, materia_nombre, curso_nombre, anio_nombre in datos:
+                    clave = f"{anio_nombre} - {curso_nombre}"
+                    if clave not in estructura:
+                        estructura[clave] = []
+                    estructura[clave].append({
+                        "id": materia_id,
+                        "nombre": materia_nombre
+                    })
+
+    except Exception as e:
+        flash("Error al cargar las materias")
+        print("🔥 Error en ver_materias:", e)
+
+    return render_template(
+        "admin/ver_materias.html",
+        estructura=estructura,
+        anios=anios,
+        cursos=cursos
+    )
 @admin_bp.route("/crear-materia", methods=["GET", "POST"])
 def crear_materia():
     if not validar_rol('admin'):
@@ -166,6 +279,9 @@ def crear_materia():
                         (nombre, curso_id)
                     )
                     conn.commit()
+                    cursor.execute("SELECT nombre FROM cursos WHERE id = %s", (curso_id,))
+                    curso_nombre = cursor.fetchone()[0]
+                    registrar_accion(f"Se creó la materia {nombre} en {curso_nombre}", "creacion")
                     flash("Materia registrada exitosamente")
                     return redirect(url_for('admin.ver_materias'))
         except Exception as e:
@@ -230,13 +346,15 @@ def eliminar_materia(id):
         try:
             with Conexion.obtener_conexion() as conn:
                 with conn.cursor() as cursor:
+                    cursor.execute("SELECT nombre FROM materias WHERE id = %s", (id,))
+                    nombre_materia = cursor.fetchone()[0]
+                    registrar_accion(f"Se eliminó la materia {nombre_materia}", "eliminacion")
                     cursor.execute("DELETE FROM materias WHERE id = %s", (id,))
                     conn.commit()
                     flash("Materia eliminada")
         except Exception:
             flash("Error al eliminar la materia")
         return redirect(url_for('admin.ver_materias'))
-
 
     materia = None
     try:
@@ -250,7 +368,6 @@ def eliminar_materia(id):
         flash("Error al cargar la materia")
 
     return render_template("admin/eliminar_materia.html", materia=materia)
-
 
 @admin_bp.route("/horarios", methods=["GET", "POST"])
 def gestionar_horarios():
@@ -416,6 +533,14 @@ def crear_examen():
 
         if fecha and hora and materia_id:
             resultado = ExamenDAO.crear_examen(curso_id, materia_id, fecha, hora, titulo, dni)
+            try:
+                with Conexion.obtener_conexion() as conn:
+                    with conn.cursor() as cursor:
+                        cursor.execute("SELECT nombre FROM materias WHERE id = %s", (materia_id,))
+                        nombre_materia = cursor.fetchone()[0]
+                        registrar_accion(f"Se registró examen de {nombre_materia} para el curso {curso_id}", "creacion")
+            except Exception as e:
+                print("Error al registrar acción de examen:", e)
             flash(resultado.get('mensaje', 'Error al crear examen'))
             return redirect(url_for('admin.dashboard'))
         elif curso_id:
@@ -470,6 +595,24 @@ def obtener_fechas_semana_actual():
     dias = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"]
     fechas = {dias[i]: (inicio_semana + timedelta(days=i)) for i in range(5)}
     return fechas
+
+@admin_bp.route("/obtener-cursos-por-anio/<int:anio_id>")
+def obtener_cursos_por_anio(anio_id):
+    cursos = []
+    try:
+        with Conexion.obtener_conexion() as conn:
+            with conn.cursor() as cursor:
+                cursor.execute("""
+                    SELECT c.id, c.nombre
+                    FROM cursos c
+                    WHERE c.anio_id = %s
+                    ORDER BY c.nombre
+                """, (anio_id,))
+                cursos = cursor.fetchall()
+    except Exception as e:
+        return {"error": str(e)}, 500
+
+    return {"cursos": cursos}
 
 
 

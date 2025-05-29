@@ -1,15 +1,15 @@
 {% extends "base_dashboard.html" %}
 
 {% block panel_title %}Modificar Materia{% endblock %}
-
 {% block panel_header %}
   <a href="{{ url_for('admin.dashboard') }}" class="text-white text-decoration-none">Panel Admin</a>
 {% endblock %}
 
-{% block content %}
-<h4>Modificar materia</h4>
 
-<form method="POST" action="{{ url_for('admin.editar_materia', materia_id=materia.id) }}">
+{% block content %}
+<h4>Editar materia</h4>
+
+<form method="POST" action="{{ url_for('admin.editar_materia', id=materia.id) }}">
   <div class="form-group">
     <label for="nombre">Nombre de la materia:</label>
     <input type="text" name="nombre" id="nombre" class="form-control" required value="{{ materia.nombre }}">
@@ -18,16 +18,13 @@
   <div class="form-group mt-3">
     <label for="curso_id">Curso:</label>
     <select name="curso_id" id="curso_id" class="form-select" required>
-      {% for id, nombre, anio_id in cursos %}
+      {% for id, nombre in cursos %}
         <option value="{{ id }}" {% if id == materia.curso_id %}selected{% endif %}>{{ nombre }}</option>
       {% endfor %}
     </select>
   </div>
 
   <button type="submit" class="btn btn-primary mt-4">Guardar cambios</button>
+  <a href="{{ url_for('admin.ver_materias') }}" class="btn btn-secondary mt-4 ms-2">Cancelar</a>
 </form>
-
-<div class="mt-4">
-  <a href="{{ url_for('admin.ver_materias') }}" class="btn btn-secondary">&larr; Volver</a>
-</div>
 {% endblock %}

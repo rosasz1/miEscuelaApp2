@@ -104,3 +104,28 @@ class PlanAcademicoDAO:
         except Exception as e:
             logging.error(f"Error al obtener cursos completos: {e}")
             return []
+
+    @staticmethod
+    def obtener_materias_por_curso(curso_id):
+        try:
+            with Conexion.obtener_conexion() as conn:
+                with conn.cursor() as cursor:
+                    cursor.execute("""
+                        SELECT m.id, m.nombre, c.nombre, a.nombre
+                        FROM materias m
+                        JOIN cursos c ON m.curso_id = c.id
+                        JOIN anios a ON c.anio_id = a.id
+                        WHERE c.id = %s
+                    """, (curso_id,))
+                    rows = cursor.fetchall()
+
+                    estructura = defaultdict(lambda: defaultdict(list))
+                    for materia_id, materia_nombre, curso_nombre, anio_nombre in rows:
+                        estructura[anio_nombre][curso_nombre].append({
+                            "id": materia_id,
+                            "nombre": materia_nombre
+                        })
+                    return estructura
+        except Exception as e:
+            logging.error(f"Error al obtener materias por curso: {e}")
+            return defaultdict(lambda: defaultdict(list))

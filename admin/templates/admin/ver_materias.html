@@ -1,70 +1,90 @@
-
 {% extends "base_dashboard.html" %}
 
 {% block panel_title %}Ver Materias{% endblock %}
 
-{% block content %}
-<h4 class="mb-4">Listado de Materias</h4>
+{% block panel_header %}
+  <a href="{{ url_for('admin.dashboard') }}" class="text-white text-decoration-none">Panel Admin</a>
+{% endblock %}
 
-<form method="GET" class="row g-3 mb-4">
+{% block content %}
+<h3 class="mb-4">Materias por Curso</h3>
+
+<form method="get" class="row g-3 mb-4">
   <div class="col-md-4">
-    <label for="anio">Año académico:</label>
-    <select id="anio" class="form-select" onchange="filtrarCursos()">
-      <option value="">Seleccionar año</option>
-      {% for id, nombre in anios %}
-        <option value="{{ id }}">{{ nombre }}</option>
+    <label for="anio_id" class="form-label">Filtrar por Año:</label>
+    <select class="form-select" name="anio_id" id="anio_id">
+      <option value="">Todos los años</option>
+      {% for anio in anios %}
+        <option value="{{ anio[0] }}" {% if request.args.get('anio_id') == anio[0]|string %}selected{% endif %}>{{ anio[1] }}</option>
       {% endfor %}
     </select>
   </div>
 
   <div class="col-md-4">
-    <label for="curso">Curso:</label>
-    <select id="curso" class="form-select">
-      <option value="">Seleccionar curso</option>
-      {% for id, nombre, anio_id in cursos %}
-        <option value="{{ id }}" data-anio="{{ anio_id }}">{{ nombre }}</option>
+    <label for="curso_id" class="form-label">Filtrar por Curso:</label>
+    <select class="form-select" name="curso_id" id="curso_id">
+      <option value="">Todos los cursos</option>
+      {% for curso in cursos %}
+        <option value="{{ curso[0] }}" {% if request.args.get('curso_id') == curso[0]|string %}selected{% endif %}>{{ curso[1] }}</option>
       {% endfor %}
     </select>
+  </div>
+
+  <div class="col-md-4 d-flex align-items-end">
+    <button type="submit" class="btn btn-primary">Aplicar Filtros</button>
   </div>
 </form>
 
-<div class="table-responsive">
-  {% for anio, cursos in estructura.items() %}
-    <h5 class="mt-4">{{ anio }}</h5>
-    {% for curso, materias in cursos.items() %}
-      <h6 class="text-primary">{{ curso }}</h6>
-      <table class="table table-bordered table-striped">
-        <thead>
-          <tr>
-            <th>Nombre</th>
-            <th>Acciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for materia in materias %}
-          <tr>
-            <td>{{ materia.nombre }}</td>
-            <td>
+{% for curso, materias in estructura.items() %}
+  <div class="mb-4 p-3 border rounded bg-light shadow-sm">
+    <h5 class="mb-3">{{ curso }}</h5>
+    {% if materias %}
+      <ul class="list-group">
+        {% for materia in materias %}
+          <li class="list-group-item d-flex justify-content-between align-items-center">
+            {{ materia.nombre }}
+            <div>
               <a href="{{ url_for('admin.editar_materia', materia_id=materia.id) }}" class="btn btn-sm btn-warning">Editar</a>
-              <a href="{{ url_for('admin.eliminar_materia', id=materia.id) }}" class="btn btn-sm btn-danger">Eliminar</a>
-            </td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-    {% endfor %}
-  {% endfor %}
-</div>
+              <a href="{{ url_for('admin.eliminar_materia', id=materia.id) }}" class="btn btn-sm btn-danger ms-2">Eliminar</a>
+            </div>
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p class="text-muted">No hay materias registradas en este curso.</p>
+    {% endif %}
+  </div>
+{% endfor %}
 
-<script>
-function filtrarCursos() {
-  const anio = document.getElementById("anio").value;
-  const cursos = document.querySelectorAll("#curso option");
-  cursos.forEach(op => {
-    if (!op.value) return;
-    op.style.display = (op.dataset.anio === anio) ? 'block' : 'none';
-  });
-  document.getElementById("curso").value = "";
-}
-</script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const anioSelect = document.getElementById("anio_id");
+      const cursoSelect = document.getElementById("curso_id");
+
+      anioSelect.addEventListener("change", function () {
+        const anioId = this.value;
+
+        cursoSelect.innerHTML = '<option value="">Todos los cursos</option>';
+        if (!anioId) return;
+
+        fetch(`/admin/obtener-cursos-por-anio/${anioId}`)
+          .then(response => response.json())
+          .then(data => {
+            if (data.cursos) {
+              data.cursos.forEach(curso => {
+                const option = document.createElement("option");
+                option.value = curso[0];
+                option.textContent = curso[1];
+                cursoSelect.appendChild(option);
+              });
+            }
+          })
+          .catch(error => {
+            console.error("Error al obtener cursos:", error);
+          });
+      });
+    });
+  </script>
 {% endblock %}
+
+
