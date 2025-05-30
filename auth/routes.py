@@ -22,8 +22,6 @@ def login():
                 'email': user.email,
                 'rol': user.rol
             }
-
-            # ✅ Agregar curso_id si es alumno
             if user.rol == 'alumno':
                 session['usuario']['curso_id'] = user.curso_id
                 return redirect(url_for('alumno.dashboard'))
@@ -33,7 +31,10 @@ def login():
                 return redirect(url_for('profesor.dashboard'))
         else:
             flash('DNI o contraseña incorrectos.')
+            return render_template('login.html')  # ← 🔐 esto evita seguir
+
     return render_template('login.html')
+
 
 @auth_bp.route('/registro', methods=['GET', 'POST'])
 def registro():
