@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import logging
 
 # Configuración básica del logger
@@ -18,7 +20,8 @@ def test_logging():
         log.error("Este es un mensaje de ERROR")    # Error
         log.critical("Este es un mensaje CRÍTICO")  # Crítico
     except Exception as e:
-        log.exception(f"Ocurrió un error: {e}")
+        log.exception("Ocurrió un error: %s", str(e))
+
 
 # Llamada a la función para probar el logging
 if __name__ == "__main__":

@@ -1,0 +1,36 @@
+<h5 class="text-center">Panel Alumno</h5>
+
+<div class="accordion" id="sidebarAccordionAlumno">
+  <!-- Notas -->
+  <div class="accordion-item">
+    <h2 class="accordion-header" id="headingNotas">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseNotasAlumno">
+        Mis Notas
+      </button>
+    </h2>
+    <div id="collapseNotasAlumno" class="accordion-collapse collapse">
+      <div class="accordion-body p-2">
+        <a href="{{ url_for('alumno.ver_notas') }}" class="d-block mb-1">Ver notas</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Asistencias -->
+  <div class="accordion-item mt-2">
+    <h2 class="accordion-header" id="headingAsistencias">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseAsistenciasAlumno">
+        Mis Asistencias
+      </button>
+    </h2>
+    <div id="collapseAsistenciasAlumno" class="accordion-collapse collapse">
+      <div class="accordion-body p-2">
+        <a href="{{ url_for('alumno.ver_asistencias') }}" class="d-block mb-1">Ver asistencias</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr>
+<div class="logout-container">
+  <a href="{{ url_for('auth.logout') }}" class="logout-btn">🔴 Cerrar sesión</a>
+</div>

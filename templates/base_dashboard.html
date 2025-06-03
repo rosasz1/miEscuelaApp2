@@ -14,8 +14,15 @@
         {% block panel_header %}{% endblock %}
       </h5>
       {% block sidebar %}
-        {% include 'admin/sidebar_admin.html' %}
-      {% endblock %}
+  {% if session['usuario']['rol'] == 'admin' %}
+    {% include 'admin/sidebar_admin.html' %}
+  {% elif session['usuario']['rol'] == 'profesor' %}
+    {% include 'profesor/sidebar_profesor.html' %}
+  {% elif session['usuario']['rol'] == 'alumno' %}
+    {% include 'alumno/sidebar_alumno.html' %}
+  {% endif %}
+{% endblock %}
+
     </div>
 
     <!-- MAIN CONTENT -->

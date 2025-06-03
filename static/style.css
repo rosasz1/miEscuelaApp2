@@ -144,4 +144,28 @@ body.login-page {
 }
 
 
+
+
+.logout-container {
+  position: absolute;
+  bottom: 20px;
+  left: 0;
+  width: 250px; /* mismo ancho que el sidebar */
+  display: flex;
+  justify-content: center;
+}
+
+.logout-btn {
+  background-color: #e53935;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 10px;
+  font-weight: bold;
+  border: none;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.logout-btn:hover {
+  background-color: #c62828;
 }

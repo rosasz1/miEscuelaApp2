@@ -1,6 +1,7 @@
+<h5 class="text-center">Panel Admin</h5>
 
+<div class="accordion" id="sidebarAccordionAdmin">
 
-<div class="accordion" id="sidebarAccordion">
   <!-- Materias y Horarios -->
   <div class="accordion-item">
     <h2 class="accordion-header" id="headingMaterias">
@@ -12,8 +13,8 @@
       <div class="accordion-body p-2">
         <a href="{{ url_for('admin.ver_materias') }}" class="d-block mb-1">Ver materias</a>
         <a href="{{ url_for('admin.crear_materia') }}" class="d-block mb-1">Crear materia</a>
-        <a href="{{ url_for('admin.gestionar_horarios') }}" class="d-block mb-1">Gestionar horarios</a>
-        <a href="{{ url_for('admin.ver_cronograma') }}" class="d-block mb-1">Ver cronograma</a>
+        <a href="{{ url_for('admin.editar_materia', materia_id=1) }}" class="d-block mb-1">Editar materia</a>
+        <a href=url_for('admin.ver_cronograma') class="d-block mb-1">Gestionar horarios</a>
       </div>
     </div>
   </div>
@@ -45,11 +46,17 @@
     <div id="collapseExamenes" class="accordion-collapse collapse">
       <div class="accordion-body p-2">
         <a href="{{ url_for('admin.crear_examen') }}" class="d-block mb-1">Registrar examen</a>
-        <a href="{{ url_for('admin.ver_examenes') }}" class="d-block mb-1">Ver exámenes por curso</a>
       </div>
     </div>
   </div>
+
 </div>
 
 <hr>
-<a href="{{ url_for('auth.logout') }}" class="d-block mt-3 text-danger">Cerrar sesión</a>
+
+<div class="logout-container">
+  <a href="{{ url_for('auth.logout') }}" class="logout-btn"> Cerrar sesión</a>
+</div>
+
+<hr>
+

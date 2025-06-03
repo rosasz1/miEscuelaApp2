@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from psycopg2 import pool
 import sys
 from backend.logger_base import log
@@ -26,8 +28,9 @@ class Conexion:
                 log.debug(f'Creación del pool exitosa {cls._pool}')
                 return cls._pool
             except Exception as e:
-                log.error(f'Ocurrió un error al obtener el pool {e}')
-                sys.exit()
+                log.error("Ocurrió un error al obtener el pool: %s", repr(e))
+
+            sys.exit()
         else:
             return cls._pool
 

@@ -34,7 +34,9 @@
     </div>
   </div>
 
-  <a href="{{ url_for('auth.logout') }}" class="d-block mt-4 text-danger">🚪 Cerrar sesión</a>
+  <div class="logout-container">
+  <a href="{{ url_for('auth.logout') }}" class="logout-btn"> Cerrar sesión</a>
+</div>
 </div>
 {% endblock %}
 

@@ -30,8 +30,12 @@ def login():
             elif user.rol == 'profesor':
                 return redirect(url_for('profesor.dashboard'))
         else:
+<<<<<<< HEAD
             flash('DNI o contraseña incorrectos.')
             return render_template('login.html')  # ← 🔐 esto evita seguir
+=======
+            flash('DNI o contraseña incorrectos.', 'error')
+>>>>>>> 4f4f86c (sidebar alumno/profesor, fix logout, error login)
 
     return render_template('login.html')
 
