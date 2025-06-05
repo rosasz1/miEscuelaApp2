@@ -30,17 +30,35 @@ def nuevo_comunicado():
     usuario = session['usuario']
     if usuario['rol'] not in ['admin', 'profesor']:
         flash("No autorizado")
-        return redirect(url_for("ver_comunicados"))
+        return redirect(url_for("comunicados.ver_comunicados"))
 
     if request.method == "POST":
-        receptor_id = request.form.get("receptor_id")
+        curso_id = request.form.get("curso_id")
+        rol_destinatario = request.form.get("rol_destinatario")
         mensaje = request.form.get("mensaje")
-        ComunicadoDAO.crear_comunicado(usuario['id'], receptor_id, mensaje)
-        flash("Comunicado enviado correctamente.")
-        return redirect(url_for("ver_comunicados"))
 
-    usuarios = UsuarioDAO.obtener_todos()
-    return render_template("nuevo_comunicado.html", usuarios=usuarios)
+        if not curso_id or not rol_destinatario:
+            flash("Debes seleccionar un curso y un tipo de destinatario.")
+            return redirect(url_for("comunicados.nuevo_comunicado"))
+
+        destinatarios = []
+
+        if rol_destinatario == "alumno":
+            destinatarios = UsuarioDAO.obtener_por_rol_y_curso("alumno", curso_id)
+        elif rol_destinatario == "profesor":
+            destinatarios = UsuarioDAO.obtener_por_rol_y_curso("profesor", curso_id)
+        elif rol_destinatario == "ambos":
+            destinatarios = UsuarioDAO.obtener_por_rol_y_curso("alumno", curso_id)
+            destinatarios += UsuarioDAO.obtener_por_rol_y_curso("profesor", curso_id)
+
+        for r in destinatarios:
+            ComunicadoDAO.crear_comunicado(usuario['id'], r[0], mensaje)
+
+        flash(f"Comunicado enviado a {len(destinatarios)} usuario(s).")
+        return redirect(url_for("comunicados.ver_comunicados"))
+
+    cursos = UsuarioDAO.obtener_cursos()
+    return render_template("nuevo_comunicado.html", cursos=cursos)
 
 
 @comunicados_bp.route("/responder/<int:comunicado_id>", methods=["GET", "POST"])

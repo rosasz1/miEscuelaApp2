@@ -252,3 +252,64 @@ class UsuarioDAO:
         except Exception as e:
             logging.error(f"Error al obtener materias con profesor: {e}")
             return []
+
+    @staticmethod
+    def obtener_por_rol(rol):
+        try:
+            with Conexion.obtener_conexion() as conn:
+                with conn.cursor() as cursor:
+                    cursor.execute("""
+                        SELECT id, nombre, apellido, email, dni, rol
+                        FROM usuarios
+                        WHERE rol = %s
+                        ORDER BY apellido, nombre
+                    """, (rol,))
+                    return cursor.fetchall()
+        except Exception as e:
+            print(f"Error al obtener usuarios por rol: {e}")
+            return []
+
+    @staticmethod
+    def obtener_por_curso(curso_id):
+        try:
+            with Conexion.obtener_conexion() as conn:
+                with conn.cursor() as cursor:
+                    cursor.execute("""
+                        SELECT id, nombre, apellido, email, dni, rol
+                        FROM usuarios
+                        WHERE curso_id = %s
+                    """, (curso_id,))
+                    return cursor.fetchall()
+        except Exception as e:
+            print(f"Error al obtener usuarios por curso: {e}")
+            return []
+
+    @staticmethod
+    def obtener_cursos():
+        try:
+            with Conexion.obtener_conexion() as conn:
+                with conn.cursor() as cursor:
+                    cursor.execute("""
+                        SELECT id, nombre
+                        FROM cursos
+                        ORDER BY nombre
+                    """)
+                    return cursor.fetchall()
+        except Exception as e:
+            print(f"Error al obtener cursos: {e}")
+            return []
+
+    @staticmethod
+    def obtener_por_rol_y_curso(rol, curso_id):
+        try:
+            with Conexion.obtener_conexion() as conn:
+                with conn.cursor() as cursor:
+                    cursor.execute("""
+                        SELECT id, nombre, apellido, email, dni, rol
+                        FROM usuarios
+                        WHERE rol = %s AND curso_id = %s
+                    """, (rol, curso_id))
+                    return cursor.fetchall()
+        except Exception as e:
+            print(f"Error al obtener usuarios por rol y curso: {e}")
+            return []
