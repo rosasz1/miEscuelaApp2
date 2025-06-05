@@ -55,12 +55,17 @@ class UsuarioDAO:
 
                     if rol == 'alumno':
                         alumno = Alumno(dni_db, nombre, apellido, email)
-                        alumno.curso_id = curso_id  # esto lo usás para el cronograma
+                        alumno.id = _id
+                        alumno.curso_id = curso_id
                         return alumno
                     elif rol == 'profesor':
-                        return Profesor(dni_db, nombre, apellido, email)
+                        profesor = Profesor(dni_db, nombre, apellido, email)
+                        profesor.id = _id
+                        return profesor
                     elif rol == 'admin':
-                        return Admin(dni_db, nombre, apellido, email)
+                        admin = Admin(dni_db, nombre, apellido, email)
+                        admin.id = _id
+                        return admin
 
         except Exception as e:
             logging.error(f"Error en login: {e}")

@@ -1,6 +1,10 @@
-<h5 class="text-center">Panel Admin</h5>
 
 <div class="accordion" id="sidebarAccordionAdmin">
+
+  <!-- Link superior al panel -->
+  <a href="{{ url_for('admin.dashboard') }}" class="text-white text-center d-block fw-bold mb-3" style="font-size: 18px; text-decoration: none;">
+    Panel Admin
+  </a>
 
   <!-- Materias y Horarios -->
   <div class="accordion-item">
@@ -14,7 +18,7 @@
         <a href="{{ url_for('admin.ver_materias') }}" class="d-block mb-1">Ver materias</a>
         <a href="{{ url_for('admin.crear_materia') }}" class="d-block mb-1">Crear materia</a>
         <a href="{{ url_for('admin.editar_materia', materia_id=1) }}" class="d-block mb-1">Editar materia</a>
-        <a href=url_for('admin.ver_cronograma') class="d-block mb-1">Gestionar horarios</a>
+        <a href="{{ url_for('admin.ver_cronograma') }}" class="d-block mb-1">Gestionar horarios</a>
       </div>
     </div>
   </div>
@@ -50,6 +54,21 @@
     </div>
   </div>
 
+  <!-- Cuaderno de Comunicados -->
+  <div class="accordion-item mt-2">
+    <h2 class="accordion-header" id="headingComunicados">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseComunicados">
+        Cuaderno de Comunicados
+      </button>
+    </h2>
+    <div id="collapseComunicados" class="accordion-collapse collapse">
+      <div class="accordion-body p-2">
+        <a href="{{ url_for('comunicados.ver_comunicados') }}" class="d-block mb-1">Ver comunicados</a>
+        <a href="{{ url_for('comunicados.nuevo_comunicado') }}" class="d-block mb-1">Enviar comunicado</a>
+      </div>
+    </div>
+  </div>
+
 </div>
 
 <hr>
@@ -59,4 +78,3 @@
 </div>
 
 <hr>
-

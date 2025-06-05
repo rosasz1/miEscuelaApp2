@@ -1,0 +1,11 @@
+{% extends "base_dashboard.html" %}
+{% block content %}
+<h2>✏️ Responder Comunicado</h2>
+
+<form method="POST">
+  <label for="respuesta">Respuesta:</label>
+  <textarea name="respuesta" rows="5" required></textarea>
+
+  <button type="submit">Enviar respuesta</button>
+</form>
+{% endblock %}

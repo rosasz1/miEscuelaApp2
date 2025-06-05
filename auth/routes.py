@@ -16,12 +16,14 @@ def login():
         user = UsuarioDAO.login(dni, password)
         if user:
             session['usuario'] = {
+                'id': user.id,
                 'dni': user.dni,
                 'nombre': user.nombre,
                 'apellido': user.apellido,
                 'email': user.email,
                 'rol': user.rol
             }
+
             if user.rol == 'alumno':
                 session['usuario']['curso_id'] = user.curso_id
                 return redirect(url_for('alumno.dashboard'))
@@ -30,14 +32,11 @@ def login():
             elif user.rol == 'profesor':
                 return redirect(url_for('profesor.dashboard'))
         else:
-<<<<<<< HEAD
             flash('DNI o contraseña incorrectos.')
-            return render_template('login.html')  # ← 🔐 esto evita seguir
-=======
-            flash('DNI o contraseña incorrectos.', 'error')
->>>>>>> 4f4f86c (sidebar alumno/profesor, fix logout, error login)
+            return render_template('login.html')
 
     return render_template('login.html')
+
 
 
 @auth_bp.route('/registro', methods=['GET', 'POST'])

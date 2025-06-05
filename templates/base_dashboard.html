@@ -10,9 +10,7 @@
   <div class="d-flex">
     <!-- SIDEBAR -->
     <div class="bg-primary text-white p-3" style="min-width: 250px; min-height: 100vh;">
-      <h5 class="text-center mb-4">
-        {% block panel_header %}{% endblock %}
-      </h5>
+
       {% block sidebar %}
   {% if session['usuario']['rol'] == 'admin' %}
     {% include 'admin/sidebar_admin.html' %}

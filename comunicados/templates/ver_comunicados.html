@@ -1,0 +1,33 @@
+{% extends "base_dashboard.html" %}
+{% block content %}
+<h2>📘 Cuaderno de Comunicados</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>De</th>
+      <th>Mensaje</th>
+      <th>Fecha</th>
+      <th>Estado</th>
+      <th>Respuesta</th>
+      <th>Acciones</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for c in comunicados %}
+    <tr>
+      <td>{{ c[1] }} {{ c[2] }}</td>
+      <td>{{ c[3] }}</td>
+      <td>{{ c[4] }}</td>
+      <td>{{ '✅ Leído' if c[5] else '📩 No leído' }}</td>
+      <td>{{ c[6] if c[6] else '—' }}</td>
+      <td>
+        {% if not c[6] and usuario['rol'] == 'alumno' %}
+        <a href="{{ url_for('comunicados.responder_comunicado', comunicado_id=c[0]) }}">Responder</a>
+        {% endif %}
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}
