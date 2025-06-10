@@ -1,0 +1,52 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Cronograma del Profesor</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    {% include 'sidebar_profesor.html' %}
+
+    <div class="main-content">
+        <h1>Cronograma de Exámenes</h1>
+
+        <form method="get" action="{{ url_for('profesor.cronograma_profesor') }}">
+            <label for="curso_id">Seleccionar curso:</label>
+            <select name="curso_id" id="curso_id" onchange="this.form.submit()">
+                {% for curso in cursos %}
+                    <option value="{{ curso.id }}" {% if curso.id == curso_seleccionado %}selected{% endif %}>
+                        {{ curso.nombre }}
+                    </option>
+                {% endfor %}
+            </select>
+        </form>
+
+        <div class="cronograma">
+            {% for dia in dias_semana %}
+                <div class="dia">
+                    <h3>{{ dia }}</h3>
+                    <ul>
+                        {% for hora in horas %}
+                            <li>
+                                <strong>{{ hora }}:</strong>
+                                {% set eventos = cronograma[dia][hora] %}
+                                {% if eventos %}
+                                    {% for ev in eventos %}
+                                        <span class="evento {% if ev.tipo == 'examen' %}examen{% else %}materia{% endif %}">
+                                            {{ ev.nombre }}
+                                        </span>
+                                    {% endfor %}
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>

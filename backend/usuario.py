@@ -1,6 +1,7 @@
 
 class Usuario:
-    def __init__(self, dni, nombre, apellido, email, rol):
+    def __init__(self, id, dni, nombre, apellido, email, rol):
+        self.id = id
         self.dni = dni
         self.nombre = nombre
         self.apellido = apellido
@@ -8,41 +9,29 @@ class Usuario:
         self.rol = rol
 
     def tiene_permiso_para_modificar_notas(self):
-        # Solo profesores y administradores pueden modificar notas
         return self.rol in ('profesor', 'admin')
 
     def tiene_permiso_para_modificar_asistencias(self):
-        # Solo profesores y administradores pueden modificar asistencias
         return self.rol in ('profesor', 'admin')
 
 
 class Profesor(Usuario):
-    def __init__(self, dni, nombre, apellido, email, rol='profesor'):
-        super().__init__(dni, nombre, apellido, email, rol)
-
-    # Hereda permisos de Usuario: profesor puede modificar notas y asistencias
+    def __init__(self, id, dni, nombre, apellido, email):
+        super().__init__(id, dni, nombre, apellido, email, 'profesor')
 
 
 class Admin(Usuario):
-    def __init__(self, dni, nombre, apellido, email, rol='admin'):
-        super().__init__(dni, nombre, apellido, email, rol)
-
-    # Admin hereda los permisos: siempre True para todas las modificaciones
+    def __init__(self, id, dni, nombre, apellido, email):
+        super().__init__(id, dni, nombre, apellido, email, 'admin')
 
 
 class Alumno(Usuario):
-    def __init__(self, dni, nombre, apellido, email, rol='alumno'):
-        super().__init__(dni, nombre, apellido, email, rol)
+    def __init__(self, id, dni, nombre, apellido, email, curso_id=None):
+        super().__init__(id, dni, nombre, apellido, email, 'alumno')
+        self.curso_id = curso_id
 
     def tiene_permiso_para_modificar_notas(self):
-        return False  # Los alumnos no pueden modificar notas
+        return False
 
     def tiene_permiso_para_modificar_asistencias(self):
-        return False  # Los alumnos no pueden modificar asistencias
-
-
-
-
-
-
-
+        return False

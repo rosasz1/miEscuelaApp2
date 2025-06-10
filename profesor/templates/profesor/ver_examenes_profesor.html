@@ -4,9 +4,7 @@
 {% block panel_title %}Exámenes Registrados{% endblock %}
 
 {% block sidebar %}
-<h5 class="text-center">Menú profesor</h5>
-<a href="{{ url_for('profesor.dashboard') }}">Inicio</a>
-<a href="{{ url_for('auth.logout') }}">Cerrar sesión</a>
+  {% include 'profesor/sidebar.html' %}
 {% endblock %}
 
 {% block content %}

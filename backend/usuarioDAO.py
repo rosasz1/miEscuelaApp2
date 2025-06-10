@@ -1,3 +1,4 @@
+
 from backend.notas import NotasDAO
 from backend.asistencias import AsistenciasDAO
 from backend.conexion import Conexion
@@ -24,11 +25,11 @@ class UsuarioDAO:
                         return None
                     _id, nombre, apellido, email, dni_db, rol = row
                     if rol == 'alumno':
-                        return Alumno(dni_db, nombre, apellido, email)
+                        return Alumno(_id, dni_db, nombre, apellido, email)
                     elif rol == 'profesor':
-                        return Profesor(dni_db, nombre, apellido, email)
+                        return Profesor(_id, dni_db, nombre, apellido, email)
                     elif rol == 'admin':
-                        return Admin(dni_db, nombre, apellido, email)
+                        return Admin(_id, dni_db, nombre, apellido, email)
         except Exception as e:
             logging.error(f"Error al obtener usuario_por_dni: {e}")
         return None
@@ -49,23 +50,15 @@ class UsuarioDAO:
 
                     _id, nombre, apellido, email, dni_db, rol, contraseña_hash, curso_id = row
 
-                    from backend.seguridad import verificar_contraseña
                     if not verificar_contraseña(contraseña_plana, contraseña_hash):
                         return None
 
                     if rol == 'alumno':
-                        alumno = Alumno(dni_db, nombre, apellido, email)
-                        alumno.id = _id
-                        alumno.curso_id = curso_id
-                        return alumno
+                        return Alumno(_id, dni_db, nombre, apellido, email, curso_id)
                     elif rol == 'profesor':
-                        profesor = Profesor(dni_db, nombre, apellido, email)
-                        profesor.id = _id
-                        return profesor
+                        return Profesor(_id, dni_db, nombre, apellido, email)
                     elif rol == 'admin':
-                        admin = Admin(dni_db, nombre, apellido, email)
-                        admin.id = _id
-                        return admin
+                        return Admin(_id, dni_db, nombre, apellido, email)
 
         except Exception as e:
             logging.error(f"Error en login: {e}")
@@ -89,65 +82,6 @@ class UsuarioDAO:
         except Exception as e:
             logging.error(f"Error al crear usuario: {e}")
             return {'mensaje': 'Error al crear usuario'}
-
-    @staticmethod
-    def modificar_usuario(dni, nombre, apellido, email, rol, contraseña_plana=None):
-        try:
-            params = [nombre, apellido, email, rol]
-            set_clause = "nombre = %s, apellido = %s, email = %s, rol = %s"
-            if contraseña_plana:
-                hash_pw = hashear_contraseña(contraseña_plana)
-                set_clause += ", contraseña = %s"
-                params.append(hash_pw)
-            params.append(dni)
-            with Conexion.obtener_conexion() as conn:
-                with conn.cursor() as cursor:
-                    cursor.execute(
-                        f"UPDATE public.usuarios SET {set_clause} WHERE dni = %s",
-                        tuple(params)
-                    )
-                    if cursor.rowcount == 0:
-                        return {'mensaje': 'Usuario no encontrado'}
-                    conn.commit()
-                    return {'mensaje': 'Usuario modificado exitosamente'}
-        except Exception as e:
-            logging.error(f"Error al modificar usuario: {e}")
-            return {'mensaje': 'Error al modificar usuario'}
-
-    @staticmethod
-    def eliminar_usuario(dni):
-        try:
-            with Conexion.obtener_conexion() as conn:
-                with conn.cursor() as cursor:
-                    cursor.execute("DELETE FROM public.usuarios WHERE dni = %s", (dni,))
-                    if cursor.rowcount == 0:
-                        return {'mensaje': 'Usuario no encontrado'}
-                    conn.commit()
-                    return {'mensaje': 'Usuario eliminado exitosamente'}
-        except Exception as e:
-            logging.error(f"Error al eliminar usuario: {e}")
-            return {'mensaje': 'Error al eliminar usuario'}
-
-    @staticmethod
-    def asignar_profesor_a_materia(materia_id, profesor_dni):
-        try:
-            with Conexion.obtener_conexion() as conn:
-                with conn.cursor() as cursor:
-                    cursor.execute("SELECT id, rol FROM public.usuarios WHERE dni = %s", (profesor_dni,))
-                    row = cursor.fetchone()
-                    if not row:
-                        return {'mensaje': 'Profesor no encontrado'}
-                    profesor_id, rol = row
-                    if rol != 'profesor':
-                        return {'mensaje': 'El DNI no corresponde a un profesor'}
-                    cursor.execute("UPDATE public.materias SET profesor_id = %s WHERE id = %s", (profesor_id, materia_id))
-                    if cursor.rowcount == 0:
-                        return {'mensaje': 'Materia no encontrada'}
-                    conn.commit()
-                    return {'mensaje': 'Profesor asignado a materia exitosamente'}
-        except Exception as e:
-            logging.error(f"Error al asignar profesor a materia: {e}")
-            return {'mensaje': 'Error al asignar profesor a materia'}
 
     @staticmethod
     def obtener_notas(dni_alumno):
@@ -209,9 +143,11 @@ class UsuarioDAO:
             logging.error(f"Error al modificar asistencia: {e}")
             return {'mensaje': 'Error al modificar asistencia'}
 
+
     @staticmethod
     def obtener_notas_por_profesor(dni_profesor, dni_alumno):
         try:
+            print("💥 ENTRÓ A obtener_notas_por_profesor")
             profesor = UsuarioDAO.obtener_usuario_por_dni(dni_profesor)
             if not profesor or profesor.rol != 'profesor':
                 return []
@@ -220,96 +156,6 @@ class UsuarioDAO:
             logging.error(f"Error al obtener notas por profesor: {e}")
             return []
 
-    @staticmethod
-    def obtener_materias_por_profesor(dni_profesor):
-        try:
-            with Conexion.obtener_conexion() as conn:
-                with conn.cursor() as cursor:
-                    cursor.execute("""
-                        SELECT id, nombre 
-                        FROM public.materias 
-                        WHERE profesor_id = (
-                            SELECT id FROM public.usuarios WHERE dni = %s
-                        )
-                    """, (dni_profesor,))
-                    return cursor.fetchall()
-        except Exception as e:
-            logging.error(f"Error al obtener materias por profesor: {e}")
-            return []
 
-    @staticmethod
-    def obtener_materias_con_profesor():
-        try:
-            with Conexion.obtener_conexion() as conn:
-                with conn.cursor() as cursor:
-                    cursor.execute("""
-                        SELECT m.id, m.nombre, u.nombre AS profesor_nombre
-                        FROM public.materias m
-                        LEFT JOIN public.usuarios u ON m.profesor_id = u.id
-                        ORDER BY m.id
-                    """)
-                    return cursor.fetchall()
-        except Exception as e:
-            logging.error(f"Error al obtener materias con profesor: {e}")
-            return []
 
-    @staticmethod
-    def obtener_por_rol(rol):
-        try:
-            with Conexion.obtener_conexion() as conn:
-                with conn.cursor() as cursor:
-                    cursor.execute("""
-                        SELECT id, nombre, apellido, email, dni, rol
-                        FROM usuarios
-                        WHERE rol = %s
-                        ORDER BY apellido, nombre
-                    """, (rol,))
-                    return cursor.fetchall()
-        except Exception as e:
-            print(f"Error al obtener usuarios por rol: {e}")
-            return []
 
-    @staticmethod
-    def obtener_por_curso(curso_id):
-        try:
-            with Conexion.obtener_conexion() as conn:
-                with conn.cursor() as cursor:
-                    cursor.execute("""
-                        SELECT id, nombre, apellido, email, dni, rol
-                        FROM usuarios
-                        WHERE curso_id = %s
-                    """, (curso_id,))
-                    return cursor.fetchall()
-        except Exception as e:
-            print(f"Error al obtener usuarios por curso: {e}")
-            return []
-
-    @staticmethod
-    def obtener_cursos():
-        try:
-            with Conexion.obtener_conexion() as conn:
-                with conn.cursor() as cursor:
-                    cursor.execute("""
-                        SELECT id, nombre
-                        FROM cursos
-                        ORDER BY nombre
-                    """)
-                    return cursor.fetchall()
-        except Exception as e:
-            print(f"Error al obtener cursos: {e}")
-            return []
-
-    @staticmethod
-    def obtener_por_rol_y_curso(rol, curso_id):
-        try:
-            with Conexion.obtener_conexion() as conn:
-                with conn.cursor() as cursor:
-                    cursor.execute("""
-                        SELECT id, nombre, apellido, email, dni, rol
-                        FROM usuarios
-                        WHERE rol = %s AND curso_id = %s
-                    """, (rol, curso_id))
-                    return cursor.fetchall()
-        except Exception as e:
-            print(f"Error al obtener usuarios por rol y curso: {e}")
-            return []

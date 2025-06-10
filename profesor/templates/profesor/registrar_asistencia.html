@@ -3,11 +3,7 @@
 {% block panel_title %}Registrar Asistencia{% endblock %}
 
 {% block sidebar %}
-<h5 class="text-center">Menú Profesor</h5>
-<a href="{{ url_for('profesor.dashboard') }}">Inicio</a>
-<a href="{{ url_for('profesor.ver_asistencias') }}">Ver asistencias</a>
-<a href="{{ url_for('profesor.modificar_asistencia') }}">Modificar asistencia</a>
-<a href="{{ url_for('auth.logout') }}">Cerrar sesión</a>
+  {% include 'profesor/sidebar.html' %}
 {% endblock %}
 
 {% block content %}

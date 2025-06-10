@@ -3,11 +3,7 @@
 {% block panel_title %}Agregar Nota{% endblock %}
 
 {% block sidebar %}
-<h5 class="text-center">Menú Profesor</h5>
-<a href="{{ url_for('profesor.dashboard') }}">Inicio</a>
-<a href="{{ url_for('profesor.ver_notas') }}">Ver notas</a>
-<a href="{{ url_for('profesor.actualizar_nota') }}">Actualizar nota</a>
-<a href="{{ url_for('auth.logout') }}">Cerrar sesión</a>
+  {% include 'profesor/sidebar.html' %}
 {% endblock %}
 
 {% block content %}

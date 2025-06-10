@@ -69,21 +69,21 @@ class ExamenDAO:
             return {"mensaje": "Error al eliminar examen"}
 
     @staticmethod
-    def obtener_examenes_por_profesor(dni):
+    def obtener_examenes_por_profesor(profesor_id):
         try:
             with Conexion.obtener_conexion() as conn:
                 with conn.cursor() as cursor:
                     cursor.execute("""
-                        SELECT m.nombre, c.nombre, e.fecha, e.hora, e.titulo
+                        SELECT m.nombre AS materia, c.nombre AS curso, e.fecha, e.hora, e.titulo
                         FROM examenes e
                         JOIN materias m ON e.materia_id = m.id
                         JOIN cursos c ON e.curso_id = c.id
-                        WHERE e.creado_por_dni = %s
+                        WHERE m.profesor_id = %s
                         ORDER BY e.fecha, e.hora
-                    """, (dni,))
+                    """, (profesor_id,))
                     return cursor.fetchall()
         except Exception as e:
-            logging.error(f"Error al obtener exámenes del profesor: {e}")
+            logging.error(f"Error al obtener exámenes por profesor: {e}")
             return []
 
     @staticmethod

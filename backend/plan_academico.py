@@ -129,3 +129,53 @@ class PlanAcademicoDAO:
         except Exception as e:
             logging.error(f"Error al obtener materias por curso: {e}")
             return defaultdict(lambda: defaultdict(list))
+
+    @staticmethod
+    def obtener_cursos_por_profesor(profesor_id):
+        try:
+            with Conexion.obtener_conexion() as conn:
+                with conn.cursor() as cursor:
+                    cursor.execute("""
+                        SELECT DISTINCT c.id, c.nombre, c.anio_id
+                        FROM cursos c
+                        JOIN materias m ON m.curso_id = c.id
+                        WHERE m.profesor_id = %s
+                        ORDER BY c.anio_id, c.nombre
+                    """, (profesor_id,))
+                    return cursor.fetchall()
+        except Exception as e:
+            logging.error(f"Error al obtener cursos del profesor {profesor_id}: {e}")
+            return []
+
+    @staticmethod
+    def insertar_curso_con_materia_para_profesor(profesor_id):
+        try:
+            with Conexion.obtener_conexion() as conn:
+                with conn.cursor() as cursor:
+                    # Insertar curso de prueba (si no existe ya uno con mismo nombre)
+                    cursor.execute("""
+                        INSERT INTO cursos (nombre, anio_id)
+                        VALUES ('Curso de Prueba', 1)
+                        RETURNING id
+                    """)
+                    curso_id = cursor.fetchone()[0]
+
+                    # Insertar materia asociada
+                    cursor.execute("""
+                        INSERT INTO materias (nombre, curso_id, profesor_id)
+                        VALUES ('Materia de Prueba', %s, %s)
+                        RETURNING id
+                    """, (curso_id, profesor_id))
+                    materia_id = cursor.fetchone()[0]
+
+                    # Insertar horario de prueba (lunes 8:00 a 10:00)
+                    cursor.execute("""
+                        INSERT INTO horarios (curso_id, materia_id, dia, hora_inicio, hora_fin)
+                        VALUES (%s, %s, 'Lunes', '08:00', '10:00')
+                    """, (curso_id, materia_id))
+
+                    return curso_id
+        except Exception as e:
+            logging.error(f"Error al insertar curso de prueba para profesor {profesor_id}: {e}")
+            return None
+
