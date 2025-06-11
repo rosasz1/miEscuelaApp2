@@ -149,15 +149,58 @@ def asignar_profesor():
         return redirect(url_for('admin.dashboard'))
     return render_template('admin/asignar_profesor.html')
 
-@admin_bp.route('/ver-notas', methods=['GET', 'POST'])
+
+@admin_bp.route('/ver_notas', methods=['GET', 'POST'])
 def ver_notas():
-    if not validar_rol('admin'):
-        return redireccion_no_autorizado()
-    notas = None
-    if request.method == 'POST':
-        dni_alumno = request.form['dni_alumno']
-        notas = UsuarioDAO.obtener_notas(dni_alumno)
-    return render_template('admin/ver_notas_alumno.html', notas=notas)
+    notas = []
+    notas_alumno = []
+
+    with Conexion.obtener_conexion() as conn:
+        cursor = conn.cursor()
+
+        # Obtener cursos y materias
+        cursor.execute("SELECT id, nombre FROM cursos")
+        cursos = cursor.fetchall()
+
+        cursor.execute("SELECT id, nombre FROM materias")
+        materias = cursor.fetchall()
+
+        if request.method == 'POST':
+            dni = request.form.get('dni_alumno')
+            curso_id = request.form.get('curso_id')
+            materia_id = request.form.get('materia_id')
+
+            if dni:
+                cursor.execute("""
+                    SELECT m.nombre, n.valor
+                    FROM notas n
+                    JOIN materias m ON n.materia_id = m.id
+                    JOIN usuarios u ON n.alumno_id = u.id
+                    WHERE u.dni = %s
+                """, (dni,))
+                notas_alumno = cursor.fetchall()
+
+                if not notas_alumno:
+                    flash("No se encontró el alumno con ese DNI", "danger")
+
+            elif curso_id and materia_id:
+                cursor.execute("""
+                    SELECT u.nombre, u.apellido, n.valor
+                    FROM notas n
+                    JOIN usuarios u ON n.alumno_id = u.id
+                    WHERE u.curso_id = %s AND n.materia_id = %s
+                """, (curso_id, materia_id))
+                notas = cursor.fetchall()
+
+        cursor.close()
+
+    return render_template("admin/ver_notas_alumno.html",
+                           cursos=cursos,
+                           materias=materias,
+                           notas=notas,
+                           notas_alumno=notas_alumno)
+
+
 
 @admin_bp.route('/agregar-nota', methods=['GET', 'POST'])
 def agregar_nota():
