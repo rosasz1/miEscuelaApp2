@@ -18,22 +18,27 @@ body {
   text-align: center;
   margin: auto;
 }
+
 .login-container h1 {
   color: #1976D2;
 }
+
 .login-container p.sub {
   color: #555;
 }
+
 .form-group {
   text-align: left;
   margin-bottom: 1.2rem;
 }
+
 .form-group label {
   display: block;
   font-weight: bold;
   margin-bottom: 0.3rem;
   color: #333;
 }
+
 .form-group input {
   width: 100%;
   padding: 0.7rem;
@@ -42,6 +47,7 @@ body {
   font-size: 1rem;
   background-color: #ffffff;
 }
+
 .login-button {
   background-color: #1976D2;
   color: #fff;
@@ -51,69 +57,8 @@ body {
   font-weight: bold;
   cursor: pointer;
 }
+
 .login-button:hover {
-  background-color: #1565c0;
-}
-
-/* Paneles */
-.sidebar {
-  background-color: #1976D2;
-  color: white;
-  height: 100vh;
-  padding: 1rem;
-}
-.sidebar h5 {
-  font-size: 1.2rem;
-  font-weight: bold;
-}
-.sidebar a {
-  color: white;
-  text-decoration: none;
-  display: block;
-  margin: 0.5rem 0;
-}
-.sidebar a:hover {
-  text-decoration: underline;
-}
-
-.content-main {
-  background-color: #ffffff;
-  padding: 2rem;
-  min-height: 100vh;
-}
-
-.right-panel {
-  background-color: #E3F2FD;
-  padding: 2rem;
-  height: 100vh;
-  overflow-y: auto;
-}
-.right-panel h5 {
-  font-weight: bold;
-  margin-bottom: 1rem;
-  color: #0D47A1;
-}
-.right-panel ul {
-  padding-left: 1.2rem;
-  margin-bottom: 2rem;
-}
-.right-panel li {
-  margin-bottom: 0.4rem;
-}
-
-/* Pie inferior */
-.lower-section {
-  background-color: #BBDEFB;
-  padding: 1rem;
-  text-align: center;
-}
-
-/* Botones genéricos */
-.btn-primary {
-  background-color: #1976D2;
-  border: none;
-}
-.btn-primary:hover {
   background-color: #1565c0;
 }
 
@@ -143,9 +88,7 @@ body.login-page {
   height: 100vh;
 }
 
-
-
-
+/* Logout */
 .logout-container {
   position: absolute;
   bottom: 20px;
@@ -169,11 +112,11 @@ body.login-page {
 .logout-btn:hover {
   background-color: #c62828;
 }
-/*COLOR CELESTE PARA FONDO DE LOGIN Y REGISTER*/
+
+/* COLOR CELESTE PARA FONDO DE LOGIN Y REGISTER */
 .login-page {
   background-color: #2F80ED;
 }
-
 
 
 
