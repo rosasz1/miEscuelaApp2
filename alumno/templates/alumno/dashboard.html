@@ -34,56 +34,41 @@
     </div>
   </div>
 
-  <div class="logout-container">
-  <a href="{{ url_for('auth.logout') }}" class="logout-btn"> Cerrar sesión</a>
-</div>
+  <div class="logout-container mt-4">
+    <a href="{{ url_for('auth.logout') }}" class="logout-btn">Cerrar sesión</a>
+  </div>
 </div>
 {% endblock %}
 
 {% block content %}
 <h2 class="mb-4">👋 Hola, {{ nombre }}. Este es tu panel.</h2>
 
-<h5 class="mb-3">📅 Cronograma semanal</h5>
-<table class="cronograma-table">
-  <thead>
-    <tr>
-      <th>Hora</th>
-      <th>Lunes</th>
-      <th>Martes</th>
-      <th>Miércoles</th>
-      <th>Jueves</th>
-      <th>Viernes</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% set horas = [
-      "07:00 - 07:45", "07:45 - 08:30", "08:30 - 09:15", "09:15 - 10:00",
-      "10:15 - 11:00", "11:00 - 11:45", "11:45 - 12:30", "12:30 - 13:15"
-    ] %}
-    {% for hora in horas %}
-    <tr>
-      <td>{{ hora }}</td>
-      {% for dia in ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"] %}
-      <td>
-        {% for h in horarios %}
-          {% if h[1] == dia and h[2].strftime('%H:%M') ~ " - " ~ h[3].strftime('%H:%M') == hora %}
-            {{ h[0] }}
-          {% endif %}
-        {% endfor %}
+<h2>📅 Cronograma semanal</h2>
 
-        {% for ex in examenes %}
-          {% set dia_examen = ex[2].strftime('%A') %}
-          {% set hora_examen = ex[3].strftime('%H:%M') %}
-          {% if dia_examen == dia and hora_examen in hora %}
-            <div><span class="text-danger fw-bold">📝 Examen: {{ ex[4] or 'sin título' }}</span></div>
-          {% endif %}
-        {% endfor %}
-      </td>
-      {% endfor %}
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
+<div class="tabla-cronograma">
+  <table>
+    <thead>
+      <tr>
+        <th>Hora</th>
+        <th>Lunes</th>
+        <th>Martes</th>
+        <th>Miércoles</th>
+        <th>Jueves</th>
+        <th>Viernes</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>07:00 - 07:45</td><td></td><td></td><td></td><td></td><td></td></tr>
+      <tr><td>07:45 - 08:30</td><td></td><td></td><td></td><td></td><td></td></tr>
+      <tr><td>08:30 - 09:15</td><td></td><td></td><td></td><td></td><td></td></tr>
+      <tr><td>09:15 - 10:00</td><td></td><td></td><td></td><td></td><td></td></tr>
+      <tr><td>10:15 - 11:00</td><td></td><td></td><td></td><td></td><td></td></tr>
+      <tr><td>11:00 - 11:45</td><td></td><td></td><td></td><td></td><td></td></tr>
+      <tr><td>11:45 - 12:30</td><td></td><td></td><td></td><td></td><td></td></tr>
+      <tr><td>12:30 - 13:15</td><td></td><td></td><td></td><td></td><td></td></tr>
+    </tbody>
+  </table>
+</div>
 {% endblock %}
 
 {% block bottom_panel %}

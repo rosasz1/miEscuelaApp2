@@ -169,3 +169,12 @@ body.login-page {
 .logout-btn:hover {
   background-color: #c62828;
 }
+/*COLOR CELESTE PARA FONDO DE LOGIN Y REGISTER*/
+.login-page {
+  background-color: #2F80ED;
+}
+
+
+
+
+

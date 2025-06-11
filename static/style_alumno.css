@@ -1,0 +1,86 @@
+/* === Estilo específico para el sidebar del alumno === */
+.sidebar-alumno .accordion-button {
+  background-color: #ffffff !important;
+  color: #000000 !important;
+  font-weight: bold;
+  border-radius: 6px;
+}
+
+.sidebar-alumno .accordion-body {
+  background-color: #ffffff !important;
+}
+
+.sidebar-alumno .accordion-body a {
+  display: block;
+  background-color: #ffffff;
+  color: #000000;
+  padding: 10px 12px;
+  margin-bottom: 8px;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: 500;
+  text-align: center;
+  transition: background-color 0.2s ease;
+}
+
+.sidebar-alumno .accordion-body a:hover {
+  background-color: #f0f0f0;
+  text-decoration: underline;
+}
+
+/* === Logout === */
+.logout-container {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.logout-btn {
+  display: inline-block;
+  background-color: #dc3545;
+  color: #ffffff !important;
+  padding: 10px 16px;
+  border-radius: 6px;
+  font-weight: bold;
+  text-decoration: none;
+  transition: background-color 0.2s ease;
+}
+
+.logout-btn:hover {
+  background-color: #bb2d3b;
+}
+
+/* === Cronograma semanal === */
+.tabla-cronograma {
+  overflow-x: auto;
+  margin-top: 20px;
+}
+
+.tabla-cronograma table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #ffffff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.tabla-cronograma th,
+.tabla-cronograma td {
+  border: 1px solid #cccccc;
+  padding: 12px;
+  text-align: center;
+  min-width: 100px;
+}
+
+.tabla-cronograma th {
+  background-color: #2F80ED;
+  color: white;
+  font-weight: bold;
+}
+
+.tabla-cronograma td {
+  background-color: #f9f9f9;
+}
+
+.tabla-cronograma td:first-child {
+  background-color: #e6f0ff;
+  font-weight: bold;
+}
