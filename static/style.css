@@ -119,5 +119,24 @@ body.login-page {
 }
 
 
+.mensaje-col:hover {
+  white-space: normal;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+}
+
+.estado-leido {
+  color: green;
+  font-weight: bold;
+}
+
+.estado-no-leido {
+  color: #d84315;
+  font-weight: bold;
+}
+</style>
+
+
+
 
 

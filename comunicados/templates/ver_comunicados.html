@@ -1,5 +1,58 @@
 {% extends "base_dashboard.html" %}
 {% block content %}
+
+<style>
+table {
+  width: 95%;
+  margin: 2rem auto;
+  border-collapse: separate;
+  border-spacing: 0 20px; /* Espacio entre filas */
+}
+
+thead th {
+  background-color: #f0f4f8;
+  padding: 0.8rem;
+  text-align: left;
+  font-weight: 600;
+  border-radius: 8px;
+}
+
+tbody tr {
+  background-color: #fff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  border-radius: 12px;
+}
+
+tbody td {
+  padding: 1.2rem;
+  vertical-align: top;
+  font-size: 0.95rem;
+}
+
+.mensaje-col {
+  max-width: 500px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mensaje-col:hover {
+  white-space: normal;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+}
+
+.estado-leido {
+  color: green;
+  font-weight: bold;
+}
+
+.estado-no-leido {
+  color: #d84315;
+  font-weight: bold;
+}
+</style>
+
 <h2>📘 Cuaderno de Comunicados</h2>
 
 <table>
@@ -17,9 +70,11 @@
     {% for c in comunicados %}
     <tr>
       <td>{{ c[1] }} {{ c[2] }}</td>
-      <td>{{ c[3] }}</td>
-      <td>{{ c[4] }}</td>
-      <td>{{ '✅ Leído' if c[5] else '📩 No leído' }}</td>
+     <td class="mensaje-col" title="{{ c[3] }}">{{ c[3] }}</td>
+<td class="{{ 'estado-leido' if c[5] else 'estado-no-leido' }}">
+  {{ '✅ Leído' if c[5] else '📩 No leído' }}
+</td>
+
       <td>{{ c[6] if c[6] else '—' }}</td>
       <td>
         {% if not c[6] and usuario['rol'] == 'alumno' %}
@@ -30,4 +85,8 @@
     {% endfor %}
   </tbody>
 </table>
+
+
 {% endblock %}
+
+

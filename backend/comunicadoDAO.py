@@ -8,7 +8,7 @@ class ComunicadoDAO:
         with Conexion.obtener_conexion() as conn:
             with conn.cursor() as cursor:
                 cursor.execute("""
-                    INSERT INTO comunicados (emisor_id, receptor_id, mensaje)
+                    INSERT INTO public.comunicados (emisor_id, receptor_id, mensaje)
                     VALUES (%s, %s, %s)
                 """, (emisor_id, receptor_id, mensaje))
                 conn.commit()
@@ -20,11 +20,10 @@ class ComunicadoDAO:
             with conn.cursor() as cursor:
                 cursor.execute("""
                     SELECT c.id, u.nombre, u.apellido, c.mensaje, c.fecha_envio, c.leido, c.respuesta
-                    FROM comunicados c
-                    JOIN usuarios u ON u.id = c.emisor_id
-                    WHERE c.receptor_id = %s
+                    FROM public.comunicados c
+                    JOIN public.usuarios u ON u.id = c.emisor_id
                     ORDER BY c.fecha_envio DESC
-                """, (usuario_id,))
+                """)
                 return cursor.fetchall()
 
     @staticmethod
@@ -32,7 +31,7 @@ class ComunicadoDAO:
         with Conexion.obtener_conexion() as conn:
             with conn.cursor() as cursor:
                 cursor.execute("""
-                    UPDATE comunicados
+                    UPDATE public.comunicados
                     SET respuesta = %s, fecha_respuesta = %s
                     WHERE id = %s
                 """, (respuesta, datetime.now(), comunicado_id))
@@ -44,7 +43,7 @@ class ComunicadoDAO:
         with Conexion.obtener_conexion() as conn:
             with conn.cursor() as cursor:
                 cursor.execute("""
-                    UPDATE comunicados
+                    UPDATE public.comunicados
                     SET leido = TRUE
                     WHERE id = %s
                 """, (comunicado_id,))

@@ -143,7 +143,6 @@ class UsuarioDAO:
             logging.error(f"Error al modificar asistencia: {e}")
             return {'mensaje': 'Error al modificar asistencia'}
 
-
     @staticmethod
     def obtener_notas_por_profesor(dni_profesor, dni_alumno):
         try:
@@ -155,6 +154,19 @@ class UsuarioDAO:
         except Exception as e:
             logging.error(f"Error al obtener notas por profesor: {e}")
             return []
+
+    @staticmethod
+    def obtener_cursos():
+        try:
+            with Conexion.obtener_conexion() as conn:
+                with conn.cursor() as cursor:
+                    cursor.execute("SELECT id, nombre FROM cursos ORDER BY nombre")
+                    return cursor.fetchall()
+        except Exception as e:
+            print(f"Error al obtener cursos: {e}")
+            return []
+
+
 
 
 
