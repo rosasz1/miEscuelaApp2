@@ -1,34 +1,55 @@
 {% extends "base_dashboard.html" %}
 {% block panel_title %}Enviar Comunicado por Curso{% endblock %}
+
 {% block content %}
+<div class="container mt-4">
 
-<h3>📘 Nuevo Comunicado por Curso</h3>
+  <h3>📘 Nuevo Comunicado por Curso</h3>
 
-<form method="POST">
+  <!-- Mensajes flash -->
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      {% for message in messages %}
+        <div class="alert alert-warning alert-dismissible fade show mt-3" role="alert">
+          {{ message }}
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
 
-  <!-- Selección de curso -->
-  <label for="curso_id">Curso:</label>
-  <select name="curso_id" required class="form-select mb-3">
-    <option value="">-- Seleccionar curso --</option>
-    {% for curso in cursos %}
-      <option value="{{ curso[0] }}">{{ curso[1] }}</option>
-    {% endfor %}
-  </select>
+  <form method="POST" class="mt-4">
 
-  <!-- Selección de destinatario -->
-  <label for="rol_destinatario">Destinatarios:</label>
-  <select name="rol_destinatario" required class="form-select mb-3">
-    <option value="">-- Seleccionar --</option>
-    <option value="alumno">Solo alumnos del curso</option>
-    <option value="profesor">Solo profesores del curso</option>
-    <option value="ambos">Alumnos y profesores</option>
-  </select>
+    <!-- Selección de curso -->
+    <div class="mb-3">
+      <label for="curso_id" class="form-label">Curso:</label>
+      <select name="curso_id" id="curso_id" required class="form-select">
+        <option value="">-- Seleccionar curso --</option>
+        {% for curso in cursos %}
+          <option value="{{ curso[0] }}">{{ curso[1] }}</option>
+        {% endfor %}
+      </select>
+    </div>
 
-  <!-- Campo mensaje -->
-  <label for="mensaje" class="mt-2">Mensaje:</label>
-  <textarea name="mensaje" rows="5" required class="form-control"></textarea>
+    <!-- Selección de destinatario -->
+    <div class="mb-3">
+      <label for="rol_destinatario" class="form-label">Destinatarios:</label>
+      <select name="rol_destinatario" id="rol_destinatario" required class="form-select">
+        <option value="">-- Seleccionar --</option>
+        <option value="alumno">Solo alumnos del curso</option>
+        <option value="profesor">Solo profesores del curso</option>
+        <option value="ambos">Alumnos y profesores</option>
+      </select>
+    </div>
 
-  <button type="submit" class="btn btn-primary mt-3">Enviar Comunicado</button>
-</form>
+    <!-- Campo mensaje -->
+    <div class="mb-3">
+      <label for="mensaje" class="form-label">Mensaje:</label>
+      <textarea name="mensaje" id="mensaje" rows="5" required class="form-control"></textarea>
+    </div>
 
+    <button type="submit" class="btn btn-primary">📤 Enviar Comunicado</button>
+  </form>
+
+</div>
 {% endblock %}

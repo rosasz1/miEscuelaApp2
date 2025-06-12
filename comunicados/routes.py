@@ -1,6 +1,5 @@
 from flask import Blueprint, render_template, request, redirect, url_for, session, flash
 from backend.comunicadoDAO import ComunicadoDAO
-from backend.usuarioDAO import UsuarioDAO
 from backend.plan_academico import PlanAcademicoDAO
 
 comunicados_bp = Blueprint('comunicados', __name__, url_prefix='/comunicados', template_folder='templates')
@@ -30,7 +29,7 @@ def nuevo_comunicado():
 
     usuario = session['usuario']
     if usuario['rol'] not in ['admin', 'profesor']:
-        flash("No autorizado")
+        flash("No autorizado.")
         return redirect(url_for("comunicados.ver_comunicados"))
 
     if request.method == "POST":
@@ -42,15 +41,19 @@ def nuevo_comunicado():
             flash("Debes seleccionar un curso y un tipo de destinatario.")
             return redirect(url_for("comunicados.nuevo_comunicado"))
 
+        if not mensaje.strip():
+            flash("El mensaje no puede estar vacío.")
+            return redirect(url_for("comunicados.nuevo_comunicado"))
+
         destinatarios = []
 
         if rol_destinatario == "alumno":
-            destinatarios = UsuarioDAO.obtener_por_rol_y_curso("alumno", curso_id)
+            destinatarios = PlanAcademicoDAO.obtener_usuarios_por_rol_y_curso("alumno", curso_id)
         elif rol_destinatario == "profesor":
-            destinatarios = UsuarioDAO.obtener_por_rol_y_curso("profesor", curso_id)
+            destinatarios = PlanAcademicoDAO.obtener_usuarios_por_rol_y_curso("profesor", curso_id)
         elif rol_destinatario == "ambos":
-            destinatarios = UsuarioDAO.obtener_por_rol_y_curso("alumno", curso_id)
-            destinatarios += UsuarioDAO.obtener_por_rol_y_curso("profesor", curso_id)
+            destinatarios = PlanAcademicoDAO.obtener_usuarios_por_rol_y_curso("alumno", curso_id)
+            destinatarios += PlanAcademicoDAO.obtener_usuarios_por_rol_y_curso("profesor", curso_id)
 
         for r in destinatarios:
             ComunicadoDAO.crear_comunicado(usuario['id'], r[0], mensaje)
@@ -74,3 +77,4 @@ def responder_comunicado(comunicado_id):
         return redirect(url_for("comunicados.ver_comunicados"))
 
     return render_template("responder_comunicado.html", comunicado_id=comunicado_id)
+

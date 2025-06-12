@@ -179,3 +179,18 @@ class PlanAcademicoDAO:
             logging.error(f"Error al insertar curso de prueba para profesor {profesor_id}: {e}")
             return None
 
+    @staticmethod
+    def obtener_usuarios_por_rol_y_curso(rol, curso_id):
+        try:
+            with Conexion.obtener_conexion() as conn:
+                with conn.cursor() as cursor:
+                    cursor.execute("""
+                        SELECT id, nombre, apellido
+                        FROM usuarios
+                        WHERE rol = %s AND curso_id = %s
+                    """, (rol, curso_id))
+                    return cursor.fetchall()
+        except Exception as e:
+            logging.error(f"Error al obtener usuarios por rol y curso: {e}")
+            return []
+
