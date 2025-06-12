@@ -92,7 +92,7 @@ class ExamenDAO:
             with Conexion.obtener_conexion() as conn:
                 with conn.cursor() as cursor:
                     cursor.execute("""
-                        SELECT m.nombre, c.nombre, e.fecha, e.hora, e.titulo, e.creado_por_dni
+                        SELECT m.nombre, c.nombre, e.fecha, e.hora, e.titulo, e.creado_por_dni, e.id
                         FROM examenes e
                         JOIN materias m ON e.materia_id = m.id
                         JOIN cursos c ON e.curso_id = c.id
@@ -109,15 +109,43 @@ class ExamenDAO:
             with Conexion.obtener_conexion() as conn:
                 with conn.cursor() as cursor:
                     cursor.execute("""
-                        SELECT m.nombre, c.nombre, e.fecha, e.hora, e.titulo, e.creado_por_dni
+                        SELECT m.nombre, c.nombre, e.fecha, e.hora, e.titulo, e.creado_por_dni, e.id
                         FROM examenes e
                         JOIN materias m ON e.materia_id = m.id
                         JOIN cursos c ON e.curso_id = c.id
                         WHERE e.curso_id = %s
                         ORDER BY e.fecha, e.hora
-                    """, (curso_id,))
+                    """,(curso_id,))
                     return cursor.fetchall()
         except Exception as e:
             logging.error(f"Error al obtener exámenes por curso: {e}")
             return []
 
+    @staticmethod
+    def eliminar_examen_por_id(examen_id):
+        with Conexion.obtener_conexion() as conn:
+            cursor = conn.cursor()
+            try:
+                cursor.execute("DELETE FROM examenes WHERE id = %s", (examen_id,))
+                conn.commit()
+                return True
+            except Exception as e:
+                conn.rollback()
+                return False
+            finally:
+                cursor.close()
+
+    @staticmethod
+    def obtener_examen_por_id(examen_id):
+        try:
+            with Conexion.obtener_conexion() as conn:
+                with conn.cursor() as cursor:
+                    cursor.execute("""
+                        SELECT fecha, hora, titulo
+                        FROM examenes
+                        WHERE id = %s
+                    """, (examen_id,))
+                    return cursor.fetchone()
+        except Exception as e:
+            logging.error(f"Error al obtener examen por ID: {e}")
+            return None
