@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for, session, flash
 from backend.comunicadoDAO import ComunicadoDAO
-from backend.usuarioDAO import UsuarioDAO  # para obtener lista de usuarios si hace falta
+from backend.usuarioDAO import UsuarioDAO
+from backend.plan_academico import PlanAcademicoDAO
 
 comunicados_bp = Blueprint('comunicados', __name__, url_prefix='/comunicados', template_folder='templates')
 
@@ -57,7 +58,7 @@ def nuevo_comunicado():
         flash(f"Comunicado enviado a {len(destinatarios)} usuario(s).")
         return redirect(url_for("comunicados.ver_comunicados"))
 
-    cursos = UsuarioDAO.obtener_cursos()
+    cursos = PlanAcademicoDAO.obtener_cursos_completos()
     return render_template("nuevo_comunicado.html", cursos=cursos)
 
 
@@ -70,6 +71,6 @@ def responder_comunicado(comunicado_id):
         respuesta = request.form.get("respuesta")
         ComunicadoDAO.responder_comunicado(comunicado_id, respuesta)
         flash("Respuesta enviada correctamente.")
-        return redirect(url_for("ver_comunicados"))
+        return redirect(url_for("comunicados.ver_comunicados"))
 
     return render_template("responder_comunicado.html", comunicado_id=comunicado_id)

@@ -150,6 +150,9 @@ def asignar_profesor():
     return render_template('admin/asignar_profesor.html')
 
 
+from flask import render_template, request, flash
+from backend.conexion import Conexion
+
 @admin_bp.route('/ver_notas', methods=['GET', 'POST'])
 def ver_notas():
     notas = []
@@ -158,39 +161,38 @@ def ver_notas():
     with Conexion.obtener_conexion() as conn:
         cursor = conn.cursor()
 
-        # Obtener cursos y materias
         cursor.execute("SELECT id, nombre FROM cursos")
         cursos = cursor.fetchall()
 
         cursor.execute("SELECT id, nombre FROM materias")
         materias = cursor.fetchall()
 
-        if request.method == 'POST':
-            dni = request.form.get('dni_alumno')
-            curso_id = request.form.get('curso_id')
-            materia_id = request.form.get('materia_id')
+        dni = request.form.get('dni_alumno')
+        curso_id = request.form.get('curso_id')
+        materia_id = request.form.get('materia_id')
 
-            if dni:
-                cursor.execute("""
-                    SELECT m.nombre, n.valor
-                    FROM notas n
-                    JOIN materias m ON n.materia_id = m.id
-                    JOIN usuarios u ON n.alumno_id = u.id
-                    WHERE u.dni = %s
-                """, (dni,))
-                notas_alumno = cursor.fetchall()
 
-                if not notas_alumno:
-                    flash("No se encontró el alumno con ese DNI", "danger")
+        if dni:
+            cursor.execute("""
+                SELECT m.nombre, n.nota
+                FROM notas n
+                JOIN materias m ON n.materia_id = m.id
+                JOIN usuarios u ON n.usuario_id = u.id
+                WHERE u.dni = %s
+            """, (dni,))
+            notas_alumno = cursor.fetchall()
 
-            elif curso_id and materia_id:
-                cursor.execute("""
-                    SELECT u.nombre, u.apellido, n.valor
-                    FROM notas n
-                    JOIN usuarios u ON n.alumno_id = u.id
-                    WHERE u.curso_id = %s AND n.materia_id = %s
-                """, (curso_id, materia_id))
-                notas = cursor.fetchall()
+            if not notas_alumno:
+                flash("No se encontró el alumno con ese DNI o no tiene notas registradas", "danger")
+
+        elif curso_id and materia_id:
+            cursor.execute("""
+                SELECT u.nombre, u.apellido, n.nota
+                FROM notas n
+                JOIN usuarios u ON n.usuario_id = u.id
+                WHERE u.curso_id = %s AND n.materia_id = %s
+            """, (curso_id, materia_id))
+            notas = cursor.fetchall()
 
         cursor.close()
 
@@ -199,7 +201,6 @@ def ver_notas():
                            materias=materias,
                            notas=notas,
                            notas_alumno=notas_alumno)
-
 
 
 @admin_bp.route('/agregar-nota', methods=['GET', 'POST'])
@@ -595,6 +596,50 @@ def crear_examen():
         materias=materias,
         materia_horarios=materia_horarios
     )
+
+@admin_bp.route('/editar-examen/<int:examen_id>', methods=['GET', 'POST'])
+def editar_examen(examen_id):
+    if not validar_rol('admin'):
+        return redireccion_no_autorizado()
+
+    if request.method == 'GET':
+        examen = ExamenDAO.obtener_examen_por_id(examen_id)
+        if not examen:
+            flash("Examen no encontrado", "danger")
+            return redirect(url_for('admin.ver_examenes'))
+
+
+        fecha_str = examen[0].strftime('%Y-%m-%d')
+        hora_str = examen[1].strftime('%H:%M')
+        titulo = examen[2]
+
+        return render_template("admin/editar_examen.html",
+                               fecha=fecha_str,
+                               hora=hora_str,
+                               titulo=titulo,
+                               examen_id=examen_id)
+
+    elif request.method == 'POST':
+        fecha = request.form.get('fecha')
+        hora = request.form.get('hora')
+        titulo = request.form.get('titulo')
+
+        resultado = ExamenDAO.modificar_examen(examen_id, fecha, hora, titulo)
+        flash(resultado['mensaje'], "success" if "correctamente" in resultado['mensaje'] else "danger")
+        return redirect(url_for('admin.ver_examenes'))
+
+@admin_bp.route('/eliminar-examen/<int:examen_id>', methods=['POST'])
+def eliminar_examen(examen_id):
+    if not validar_rol('admin'):
+        return redireccion_no_autorizado()
+
+    if ExamenDAO.eliminar_examen_por_id(examen_id):
+        flash("Examen eliminado correctamente", "success")
+    else:
+        flash("Error al eliminar el examen", "danger")
+
+    return redirect(url_for('admin.ver_examenes'))
+
 
 def obtener_materias_y_horarios_por_curso(curso_id):
     datos = PlanAcademicoDAO.obtener_horarios_por_curso(curso_id)
