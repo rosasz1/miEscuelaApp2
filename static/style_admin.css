@@ -1,78 +1,78 @@
-/* Sidebar admin */
-.sidebar {
-  background-color: #1976D2;
-  color: white;
-  height: 100vh;
-  padding: 1rem;
-}
-
-.sidebar h5 {
-  font-size: 1.2rem;
-  font-weight: bold;
-}
-
-.sidebar a {
-  color: white;
-  text-decoration: none;
-  display: block;
-  margin: 0.5rem 0;
-}
-
-.sidebar a:hover {
-  text-decoration: underline;
-}
-
-/* Contenido principal */
-.content-main {
-  background-color: #ffffff;
-  padding: 2rem;
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background: linear-gradient(to bottom right, #1de9b6, #81d4fa);
   min-height: 100vh;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  background-size: cover;
+  display: flex;
 }
 
-/* Panel derecho */
-.right-panel {
-  background-color: #E3F2FD;
-  padding: 2rem;
+.sidebar {
+  width: 250px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(8px);
   height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
   overflow-y: auto;
-}
-
-.right-panel h5 {
-  font-weight: bold;
-  margin-bottom: 1rem;
-  color: #0D47A1;
-}
-
-.right-panel ul {
-  padding-left: 1.2rem;
-  margin-bottom: 2rem;
-}
-
-.right-panel li {
-  margin-bottom: 0.4rem;
-}
-
-/* Pie inferior */
-.lower-section {
-  background-color: #BBDEFB;
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
   padding: 1rem;
+  z-index: 1000;
+}
+
+.menu-section {
+  margin-bottom: 1rem;
+}
+
+.menu-header {
+  font-weight: bold;
+  background-color: #f4f4f4;
+  padding: 12px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.menu-header:hover {
+  background-color: #e0e0e0;
+}
+
+.submenu {
+  display: none;
+  padding-left: 12px;
+  margin-top: 5px;
+}
+
+.menu-header.open + .submenu {
+  display: block;
+}
+
+.submenu a {
+  display: block;
+  text-decoration: none;
+  color: #1976D2;
+  padding: 8px 10px;
+  border-radius: 6px;
+  transition: background 0.2s;
+}
+
+.submenu a:hover {
+  background-color: #e3f2fd;
+  color: #0d47a1;
+}
+
+.logout-container {
   text-align: center;
+  margin-top: 30px;
 }
 
-/* Botones del admin */
-.btn-primary {
-  background-color: #1976D2;
-  border: none;
-}
-
-.btn-primary:hover {
-  background-color: #1565c0;
-}
-
-.btn-danger {
+.logout-btn {
   background-color: #e53935;
   color: white;
-  padding: 0.5rem 1rem;
+  padding: 0.6rem 1.2rem;
   border-radius: 10px;
   font-weight: bold;
   border: none;
@@ -80,56 +80,12 @@
   display: inline-block;
 }
 
-.btn-danger:hover {
+.logout-btn:hover {
   background-color: #c62828;
 }
-/* === Estilo para Ver Notas === */
 
-/* Formularios */
-form label {
-  font-weight: 600;
-  margin-bottom: 5px;
-}
-
-form input,
-form select {
-  margin-bottom: 15px;
-}
-
-/* Tablas */
-table th,
-table td {
-  text-align: center;
-  vertical-align: middle;
-}
-
-.table-striped tbody tr:hover {
-  background-color: #f1f1f1;
-}
-
-.table thead {
-  background-color: #1976D2;
-  color: white;
-}
-
-/* Botones */
-.btn-primary,
-.btn-success {
-  min-width: 180px;
-}
-
-.btn-success:hover {
-  background-color: #388e3c;
-}
-
-/* Títulos */
-.container h4,
-.container h5 {
-  margin-top: 25px;
-  margin-bottom: 15px;
-}
-
-/* Flash messages */
-.alert {
-  font-size: 0.95rem;
+.main-content {
+  margin-left: 250px;
+  padding: 2rem;
+  flex-grow: 1;
 }

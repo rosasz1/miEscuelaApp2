@@ -1,82 +1,44 @@
-<div class="accordion" id="sidebarAccordionAdmin">
-
-  <!-- Link superior al panel -->
-  <a href="{{ url_for('admin.dashboard') }}" class="text-white text-center d-block fw-bold mb-3" style="font-size: 18px; text-decoration: none;">
-    Panel Admin
-  </a>
-
-  <!-- Materias y Horarios -->
-  <div class="accordion-item">
-    <h2 class="accordion-header" id="headingMaterias">
-      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseMaterias">
-        Materias y Horarios
-      </button>
-    </h2>
-    <div id="collapseMaterias" class="accordion-collapse collapse">
-      <div class="accordion-body p-2">
-        <a href="{{ url_for('admin.ver_materias') }}" class="d-block mb-1">Ver materias</a>
-        <a href="{{ url_for('admin.crear_materia') }}" class="d-block mb-1">Crear materia</a>
-        <a href="{{ url_for('admin.editar_materia', materia_id=1) }}" class="d-block mb-1">Editar materia</a>
-        <a href="{{ url_for('admin.ver_cronograma') }}" class="d-block mb-1">Gestionar horarios</a>
-      </div>
+<div class="sidebar">
+  <div class="menu-section">
+    <div class="menu-header" onclick="toggleMenu(this)">📚 Materias y Horarios</div>
+    <div class="submenu">
+      <a href="{{ url_for('admin.ver_materias') }}">Ver materias</a>
+      <a href="{{ url_for('admin.crear_materia') }}">Crear materia</a>
+      <a href="{{ url_for('admin.editar_materia', materia_id=1) }}">Editar materia</a>
+      <a href="{{ url_for('admin.ver_cronograma') }}">Gestionar horarios</a>
     </div>
   </div>
-
-  <!-- Gestión de Usuarios -->
-  <div class="accordion-item mt-2">
-    <h2 class="accordion-header" id="headingUsuarios">
-      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseUsuarios">
-        Gestión de Usuarios
-      </button>
-    </h2>
-    <div id="collapseUsuarios" class="accordion-collapse collapse">
-      <div class="accordion-body p-2">
-        <a href="{{ url_for('admin.crear_usuario') }}" class="d-block mb-1">Crear usuario</a>
-        <a href="{{ url_for('admin.modificar_usuario') }}" class="d-block mb-1">Modificar usuario</a>
-        <a href="{{ url_for('admin.eliminar_usuario') }}" class="d-block mb-1">Eliminar usuario</a>
-        <a href="{{ url_for('admin.asignar_profesor') }}" class="d-block mb-1">Asignar profesor</a>
-        <a href="{{ url_for('admin.ver_notas') }}" class="d-block mb-1">Ver notas de alumno</a>
-      </div>
+  <div class="menu-section">
+    <div class="menu-header" onclick="toggleMenu(this)">👥 Gestión de Usuarios</div>
+    <div class="submenu">
+      <a href="{{ url_for('admin.crear_usuario') }}">Crear usuario</a>
+      <a href="{{ url_for('admin.modificar_usuario') }}">Modificar usuario</a>
+      <a href="{{ url_for('admin.eliminar_usuario') }}">Eliminar usuario</a>
+      <a href="{{ url_for('admin.asignar_profesor') }}">Asignar profesor</a>
+      <a href="{{ url_for('admin.ver_notas') }}">Ver notas de alumno</a>
     </div>
   </div>
-
-  <!-- Exámenes -->
-  <div class="accordion-item mt-2">
-    <h2 class="accordion-header" id="headingExamenes">
-      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExamenes">
-        Exámenes
-      </button>
-    </h2>
-    <div id="collapseExamenes" class="accordion-collapse collapse">
-      <div class="accordion-body p-2">
-        <a href="{{ url_for('admin.crear_examen') }}" class="d-block mb-1">Registrar examen</a>
-        <a href="{{ url_for('admin.ver_examenes') }}" class="d-block mb-1">Ver exámenes</a>
-      </div>
+  <div class="menu-section">
+    <div class="menu-header" onclick="toggleMenu(this)">📝 Exámenes</div>
+    <div class="submenu">
+      <a href="{{ url_for('admin.crear_examen') }}">Registrar examen</a>
+      <a href="{{ url_for('admin.ver_examenes') }}">Ver exámenes</a>
     </div>
   </div>
-
-  <!-- Cuaderno de Comunicados -->
-  <div class="accordion-item mt-2">
-    <h2 class="accordion-header" id="headingComunicados">
-      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseComunicados">
-        Cuaderno de Comunicados
-      </button>
-    </h2>
-    <div id="collapseComunicados" class="accordion-collapse collapse">
-      <div class="accordion-body p-2">
-        <a href="{{ url_for('comunicados.ver_comunicados') }}" class="d-block mb-1">Ver comunicados</a>
-        <a href="{{ url_for('comunicados.nuevo_comunicado') }}" class="d-block mb-1">Enviar comunicado</a>
-      </div>
+  <div class="menu-section">
+    <div class="menu-header" onclick="toggleMenu(this)">📬 Comunicados</div>
+    <div class="submenu">
+      <a href="{{ url_for('comunicados.ver_comunicados') }}">Ver comunicados</a>
+      <a href="{{ url_for('comunicados.nuevo_comunicado') }}">Enviar comunicado</a>
     </div>
   </div>
-
+  <div class="logout-container">
+    <a href="{{ url_for('auth.logout') }}" class="logout-btn">Cerrar sesión</a>
+  </div>
 </div>
 
-<hr>
-
-<div class="logout-container">
-  <a href="{{ url_for('auth.logout') }}" class="logout-btn"> Cerrar sesión</a>
-</div>
-
-<hr>
-
+<script>
+  function toggleMenu(element) {
+    element.classList.toggle("open");
+  }
+</script>
