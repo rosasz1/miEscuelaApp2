@@ -8,6 +8,8 @@
 
 
 {% block content %}
+<div class="admin-container">
+
 <h4>Consultar asistencias de un alumno</h4>
 <form method="POST" action="{{ url_for('admin.ver_asistencias') }}">
   <div class="form-group">
@@ -50,3 +52,4 @@
 </div>
 {% endblock %}
 
+</div>

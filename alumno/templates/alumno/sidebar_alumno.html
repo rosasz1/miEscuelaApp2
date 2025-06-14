@@ -1,41 +1,51 @@
-<h5 class="text-center">Panel Alumno</h5>
+<h5 class="text-center text-white mt-3">🎓 Panel Alumno</h5>
 
-<div class="accordion" id="sidebarAccordionAlumno">
+<div class="accordion accordion-flush mt-3" id="sidebarAccordionAlumno">
 
-<a href="{{ url_for('alumno.dashboard') }}" class="text-white text-center d-block fw-bold mb-3" style="font-size: 18px; text-decoration: none;">
-  Panel Alumno
-</a>
+  <!-- Panel principal -->
+  <a href="{{ url_for('alumno.dashboard') }}"
+     class="text-white text-center d-block fw-bold mb-3"
+     style="font-size: 18px; text-decoration: none;">
+    🏠 Inicio
+  </a>
 
   <!-- Notas -->
-  <div class="accordion-item">
+  <div class="accordion-item bg-transparent border-0">
     <h2 class="accordion-header" id="headingNotas">
-      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseNotasAlumno">
-        Mis Notas
+      <button class="accordion-button collapsed bg-light" type="button" data-bs-toggle="collapse" data-bs-target="#collapseNotasAlumno">
+        📑 Mis Notas
       </button>
     </h2>
     <div id="collapseNotasAlumno" class="accordion-collapse collapse">
-      <div class="accordion-body p-2">
-        <a href="{{ url_for('alumno.ver_notas') }}" class="d-block mb-1">Ver notas</a>
+      <div class="accordion-body p-2 bg-white">
+        <a href="{{ url_for('alumno.ver_notas') }}" class="d-block mb-1 text-dark">📄 Ver notas</a>
       </div>
     </div>
   </div>
 
   <!-- Asistencias -->
-  <div class="accordion-item mt-2">
+  <div class="accordion-item bg-transparent border-0">
     <h2 class="accordion-header" id="headingAsistencias">
-      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseAsistenciasAlumno">
-        Mis Asistencias
+      <button class="accordion-button collapsed bg-light" type="button" data-bs-toggle="collapse" data-bs-target="#collapseAsistenciasAlumno">
+        🕒 Mis Asistencias
       </button>
     </h2>
     <div id="collapseAsistenciasAlumno" class="accordion-collapse collapse">
-      <div class="accordion-body p-2">
-        <a href="{{ url_for('alumno.ver_asistencias') }}" class="d-block mb-1">Ver asistencias</a>
+      <div class="accordion-body p-2 bg-white">
+        <a href="{{ url_for('alumno.ver_asistencias') }}" class="d-block mb-1 text-dark">📆 Ver asistencias</a>
       </div>
     </div>
   </div>
+
 </div>
 
-<hr>
-<div class="logout-container">
-  <a href="{{ url_for('auth.logout') }}" class="logout-btn">🔴 Cerrar sesión</a>
+<hr class="text-white">
+
+<!-- Logout -->
+<div class="logout-container text-center">
+  <a href="{{ url_for('auth.logout') }}"
+     class="btn btn-danger btn-sm px-4 mt-2">
+     🔴 Cerrar sesión
+  </a>
 </div>
+

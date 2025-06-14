@@ -8,6 +8,7 @@
 
 
 {% block content %}
+<div class="admin-container">
 <h4>Agregar nota a un alumno</h4>
 <form method="POST" action="{{ url_for('admin.agregar_nota') }}">
   <div class="form-group">
@@ -30,4 +31,4 @@
 </div>
 {% endblock %}
 
-
+</div>

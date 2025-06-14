@@ -1,35 +1,45 @@
-body {
+/* === Fondo general === */
+body, html {
   margin: 0;
+  padding: 0;
+  height: 100%;
   font-family: 'Segoe UI', sans-serif;
   background: linear-gradient(to bottom right, #1de9b6, #81d4fa);
-  min-height: 100vh;
   background-attachment: fixed;
   background-repeat: no-repeat;
   background-size: cover;
-  display: flex;
 }
 
+.d-flex {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* === Sidebar === */
 .sidebar {
   width: 250px;
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(8px);
+  background: #4FC3F7;
   height: 100vh;
   position: fixed;
   top: 0;
   left: 0;
   overflow-y: auto;
-  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
   padding: 1rem;
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
   z-index: 1000;
+  color: #ffffff;
 }
 
+/* === Sidebar menu items === */
 .menu-section {
   margin-bottom: 1rem;
 }
 
 .menu-header {
   font-weight: bold;
-  background-color: #f4f4f4;
+  background-color: #ffffff;
+  color: #0d47a1;
   padding: 12px;
   border-radius: 10px;
   cursor: pointer;
@@ -37,13 +47,13 @@ body {
 }
 
 .menu-header:hover {
-  background-color: #e0e0e0;
+  background-color: #e0f7fa;
 }
 
 .submenu {
   display: none;
-  padding-left: 12px;
-  margin-top: 5px;
+  padding-left: 10px;
+  margin-top: 6px;
 }
 
 .menu-header.open + .submenu {
@@ -53,17 +63,90 @@ body {
 .submenu a {
   display: block;
   text-decoration: none;
-  color: #1976D2;
+  color: #0d47a1;
+  background-color: #ffffff;
   padding: 8px 10px;
   border-radius: 6px;
-  transition: background 0.2s;
+  margin-bottom: 6px;
+  font-weight: 500;
+  font-size: 15px;
 }
 
 .submenu a:hover {
   background-color: #e3f2fd;
+  color: #1565c0;
+}
+
+/* === Main content === */
+.main-content {
+  margin-left: 250px;
+  padding: 2rem 3rem;
+  width: calc(100% - 250px);
+  box-sizing: border-box;
+  overflow-y: auto;
+  color: #212121;
+}
+
+/* === Dashboard: Cards === */
+.card-box {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 2rem;
+  justify-content: center;
+}
+
+.card-box .card {
+  border-radius: 12px;
+  padding: 1.5rem;
+  font-weight: bold;
+  color: white;
+  min-width: 160px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  text-align: center;
+  flex-grow: 1;
+}
+
+.card.azul { background-color: #1976D2; }
+.card.verde { background-color: #388E3C; }
+.card.celeste { background-color: #03A9F4; }
+.card.amarillo { background-color: #FBC02D; }
+
+/* === Acciones rápidas === */
+.quick-actions {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-top: 2rem;
+}
+
+.quick-actions a {
+  background-color: #ffffff;
+  border: 2px solid #90CAF9;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  font-weight: bold;
+  color: #0d47a1;
+  text-decoration: none;
+  transition: background-color 0.2s;
+}
+
+.quick-actions a:hover {
+  background-color: #e3f2fd;
+}
+
+/* === Acciones recientes === */
+.acciones-recientes {
+  margin-top: 2rem;
+}
+
+.acciones-recientes h5 {
+  font-weight: bold;
   color: #0d47a1;
 }
 
+/* === Logout === */
 .logout-container {
   text-align: center;
   margin-top: 30px;
@@ -83,9 +166,22 @@ body {
 .logout-btn:hover {
   background-color: #c62828;
 }
+.container-ver {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 1rem;
+  box-sizing: border-box;
+}
 
-.main-content {
-  margin-left: 250px;
-  padding: 2rem;
-  flex-grow: 1;
+.container-ver select,
+.container-ver button {
+  min-width: 180px;
+}
+.admin-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 1rem 2rem;
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 0 12px rgba(0,0,0,0.08);
 }

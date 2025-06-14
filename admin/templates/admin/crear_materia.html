@@ -3,10 +3,12 @@
 {% block panel_title %}Registrar Nueva Materia{% endblock %}
 
 {% block panel_header %}
+
   <a href="{{ url_for('admin.dashboard') }}" class="text-white text-decoration-none">Panel Admin</a>
 {% endblock %}
 
 {% block content %}
+<div class="admin-container">
 <h4>Registrar nueva materia</h4>
 
 <form method="POST" action="{{ url_for('admin.crear_materia') }}">
@@ -57,3 +59,4 @@ function filtrarCursos() {
 }
 </script>
 {% endblock %}
+  </div>
