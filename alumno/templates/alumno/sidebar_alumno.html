@@ -1,51 +1,50 @@
-<h5 class="text-center text-white mt-3">🎓 Panel Alumno</h5>
+<div class="sidebar-alumno">
+  <!-- Acordeón principal -->
+  <button class="accordion" id="panelToggle" type="button">📂 Panel Alumno</button>
+  <div id="panelAlumnoContent" class="hidden-panel">
 
-<div class="accordion accordion-flush mt-3" id="sidebarAccordionAlumno">
-
-  <!-- Panel principal -->
-  <a href="{{ url_for('alumno.dashboard') }}"
-     class="text-white text-center d-block fw-bold mb-3"
-     style="font-size: 18px; text-decoration: none;">
-    🏠 Inicio
-  </a>
-
-  <!-- Notas -->
-  <div class="accordion-item bg-transparent border-0">
-    <h2 class="accordion-header" id="headingNotas">
-      <button class="accordion-button collapsed bg-light" type="button" data-bs-toggle="collapse" data-bs-target="#collapseNotasAlumno">
-        📑 Mis Notas
-      </button>
-    </h2>
-    <div id="collapseNotasAlumno" class="accordion-collapse collapse">
-      <div class="accordion-body p-2 bg-white">
-        <a href="{{ url_for('alumno.ver_notas') }}" class="d-block mb-1 text-dark">📄 Ver notas</a>
-      </div>
+    <!-- Subacordeones -->
+    <button class="accordion" type="button">📚 Mis Notas</button>
+    <div class="panel">
+      <a href="{{ url_for('alumno.ver_notas') }}">📘 Ver mis notas</a>
     </div>
-  </div>
 
-  <!-- Asistencias -->
-  <div class="accordion-item bg-transparent border-0">
-    <h2 class="accordion-header" id="headingAsistencias">
-      <button class="accordion-button collapsed bg-light" type="button" data-bs-toggle="collapse" data-bs-target="#collapseAsistenciasAlumno">
-        🕒 Mis Asistencias
-      </button>
-    </h2>
-    <div id="collapseAsistenciasAlumno" class="accordion-collapse collapse">
-      <div class="accordion-body p-2 bg-white">
-        <a href="{{ url_for('alumno.ver_asistencias') }}" class="d-block mb-1 text-dark">📆 Ver asistencias</a>
-      </div>
+    <button class="accordion" type="button">✅ Mis Asistencias</button>
+    <div class="panel">
+      <a href="{{ url_for('alumno.ver_asistencias') }}">📋 Ver asistencias</a>
     </div>
-  </div>
 
+    <!-- Botón Cerrar sesión -->
+    <button class="cerrar-sesion-btn" onclick="location.href='/logout'">🔴 Cerrar sesión</button>
+  </div>
 </div>
 
-<hr class="text-white">
 
-<!-- Logout -->
-<div class="logout-container text-center">
-  <a href="{{ url_for('auth.logout') }}"
-     class="btn btn-danger btn-sm px-4 mt-2">
-     🔴 Cerrar sesión
-  </a>
-</div>
+
+<script>
+  const panelToggle = document.getElementById("panelToggle");
+  const panelContent = document.getElementById("panelAlumnoContent");
+
+  panelToggle.addEventListener("click", function (e) {
+    e.stopPropagation();
+    panelContent.classList.toggle("hidden-panel");
+  });
+
+  const subAcordeones = document.querySelectorAll(".sidebar-alumno .accordion:not(#panelToggle)");
+  subAcordeones.forEach((acc) => {
+    acc.addEventListener("click", function (e) {
+      e.stopPropagation();
+      e.preventDefault(); // ⚠️ esta línea es la que evita redireccionar por error
+
+      const panel = this.nextElementSibling;
+      if (panel && panel.classList.contains("panel")) {
+        panel.style.display = (panel.style.display === "block") ? "none" : "block";
+      }
+    });
+  });
+</script>
+
+
+
+
 

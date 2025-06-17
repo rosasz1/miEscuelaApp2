@@ -1,15 +1,13 @@
 {% extends "base_dashboard.html" %}
 
+{% block title %}Mis Asistencias{% endblock %}
+
 {% block panel_title %}
   Mis Asistencias
 {% endblock %}
 
 {% block sidebar %}
-  <h5 class="text-center">Menú Alumno</h5>
-  <a href="{{ url_for('alumno.dashboard') }}">Inicio</a>
-  <a href="{{ url_for('alumno.ver_notas') }}">Ver notas</a>
-  <a href="{{ url_for('alumno.ver_asistencias') }}">Ver asistencias</a>
-  <a href="{{ url_for('auth.logout') }}">Cerrar sesión</a>
+  {% include 'alumno/sidebar_menu_alumno.html' %}
 {% endblock %}
 
 {% block content %}

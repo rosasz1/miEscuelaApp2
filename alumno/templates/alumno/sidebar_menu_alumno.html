@@ -1,0 +1,21 @@
+<div class="sidebar-alumno">
+  <button class="accordion" id="menuToggle" type="button">📂 Menú Alumno</button>
+  <div id="menuAlumnoContent" class="hidden-panel">
+    <a href="{{ url_for('alumno.dashboard') }}">🔙 Inicio</a>
+    <a href="{{ url_for('alumno.ver_notas') }}">📘 Ver Notas</a>
+    <a href="{{ url_for('alumno.ver_asistencias') }}">📋 Ver Asistencias</a>
+    <a href="{{ url_for('auth.logout') }}" class="logout-btn mt-2">🔴 Cerrar sesión</a>
+  </div>
+</div>
+
+<script>
+  const menuToggle = document.getElementById("menuToggle");
+  const menuContent = document.getElementById("menuAlumnoContent");
+
+  if (menuToggle && menuContent) {
+    menuToggle.addEventListener("click", function (e) {
+      e.stopPropagation();
+      menuContent.classList.toggle("hidden-panel");
+    });
+  }
+</script>

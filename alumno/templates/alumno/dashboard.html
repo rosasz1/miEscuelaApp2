@@ -5,39 +5,7 @@
 {% block panel_title %}Bienvenido, {{ nombre }}{% endblock %}
 
 {% block sidebar %}
-<h5 class="text-center">Panel Alumno</h5>
-
-<div class="accordion" id="sidebarAccordionAlumno">
-  <div class="accordion-item">
-    <h2 class="accordion-header" id="headingNotas">
-      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseNotas">
-        Mis Notas
-      </button>
-    </h2>
-    <div id="collapseNotas" class="accordion-collapse collapse" data-bs-parent="#sidebarAccordionAlumno">
-      <div class="accordion-body p-2">
-        <a href="{{ url_for('alumno.ver_notas') }}">📘 Ver mis notas</a>
-      </div>
-    </div>
-  </div>
-
-  <div class="accordion-item mt-2">
-    <h2 class="accordion-header" id="headingAsistencias">
-      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseAsistencias">
-        Mis Asistencias
-      </button>
-    </h2>
-    <div id="collapseAsistencias" class="accordion-collapse collapse" data-bs-parent="#sidebarAccordionAlumno">
-      <div class="accordion-body p-2">
-        <a href="{{ url_for('alumno.ver_asistencias') }}">📋 Ver mis asistencias</a>
-      </div>
-    </div>
-  </div>
-
-  <div class="logout-container mt-4">
-    <a href="{{ url_for('auth.logout') }}" class="logout-btn">Cerrar sesión</a>
-  </div>
-</div>
+  {% include 'alumno/sidebar_alumno.html' %}
 {% endblock %}
 
 {% block content %}
@@ -79,3 +47,4 @@
   <li>Lengua: 9.00</li>
 </ul>
 {% endblock %}
+
