@@ -1,7 +1,7 @@
 {% extends "base_dashboard.html" %}
 
 {% block title %}Cronograma por Curso{% endblock %}
-{% block panel_title %}Visualización de Cronograma{% endblock %}
+
 {% block panel_header %}
   <a href="{{ url_for('admin.dashboard') }}" class="text-white text-decoration-none">Panel Admin</a>
 {% endblock %}
@@ -25,11 +25,12 @@ table.cronograma-table td.examen-hoy {
 }
 </style>
 
-<h2 class="mb-4">📅 Cronograma de clases por curso</h2>
+
 <div class="admin-container">
 
 
 <form method="POST" class="mb-4">
+
   <label for="curso_id" class="form-label">Seleccionar curso:</label>
   <select name="curso_id" id="curso_id" class="form-select mb-2" required>
     {% for cid, nombre in cursos %}

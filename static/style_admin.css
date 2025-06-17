@@ -185,3 +185,132 @@ body, html {
   border-radius: 10px;
   box-shadow: 0 0 12px rgba(0,0,0,0.08);
 }
+/* Panel lateral admin */
+.sidebar-admin {
+  width: 250px;
+  background-color: #b3e5fc;
+  padding: 15px;
+  height: 100vh;
+  position: fixed;
+  left: 0;
+  top: 0;
+  overflow-y: auto;
+  font-family: 'Segoe UI', sans-serif;
+  box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+}
+
+/* Botón principal */
+.accordion-admin {
+  background-color: #0288d1;
+  color: white;
+  font-weight: bold;
+  border: none;
+  width: 100%;
+  padding: 12px;
+  text-align: left;
+  border-radius: 10px;
+  cursor: pointer;
+  margin-bottom: 10px;
+}
+
+.admin-hidden-panel {
+  display: none;
+}
+
+/* Subacordeones */
+.subaccordion {
+  background-color: white;
+  border: none;
+  width: 100%;
+  padding: 10px 15px;
+  text-align: left;
+  margin-top: 10px;
+  border-radius: 10px;
+  font-weight: bold;
+  cursor: pointer;
+  color: #212121;
+  transition: background-color 0.2s ease;
+}
+
+.subaccordion:hover {
+  background-color: #e1f5fe;
+}
+
+.subpanel {
+  display: none;
+  padding-left: 10px;
+  margin-top: 5px;
+}
+
+.subpanel a {
+  display: block;
+  padding: 8px;
+  background-color: #ffffff;
+  margin-bottom: 6px;
+  border-radius: 8px;
+  color: #333;
+  text-decoration: none;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+}
+
+.subpanel a:hover {
+  background-color: #bbdefb;
+  color: #000;
+}
+
+/* Botón Cerrar sesión */
+.cerrar-sesion-btn {
+  background-color: #e53935;
+  color: white;
+  border: none;
+  width: 100%;
+  padding: 12px;
+  border-radius: 10px;
+  font-weight: bold;
+  margin-top: 25px;
+  cursor: pointer;
+}
+
+.cerrar-sesion-btn:hover {
+  background-color: #c62828;
+}
+.subpanel {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease, padding 0.3s ease;
+  padding-left: 10px;
+  margin-top: 0;
+  padding-top: 0;
+}
+
+/* Submenú activo */
+.subpanel.active {
+  max-height: 500px;
+  padding-top: 5px;
+  margin-top: 5px;
+}
+.admin-inicio-btn {
+  display: block;
+  background-color: #ffffff;
+  padding: 10px 15px;
+  border-radius: 10px;
+  font-weight: bold;
+  color: #212121;
+  text-decoration: none;
+  margin-bottom: 10px;
+}
+
+.admin-inicio-btn:hover {
+  background-color: #e3f2fd;
+  color: #1565c0;
+}
+.subpanel {
+  display: none;
+  padding-left: 12px;
+  margin-top: 5px;
+}
+
+.subpanel.active {
+  display: block;
+}
