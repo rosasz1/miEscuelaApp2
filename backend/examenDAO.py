@@ -149,3 +149,19 @@ class ExamenDAO:
         except Exception as e:
             logging.error(f"Error al obtener examen por ID: {e}")
             return None
+
+    @staticmethod
+    def obtener_examenes_por_profesor_y_curso(profesor_id, curso_id):
+        try:
+            with Conexion.obtener_conexion() as conn:
+                with conn.cursor() as cursor:
+                    cursor.execute("""
+                        SELECT e.fecha, e.hora_inicio, m.nombre AS materia
+                        FROM examenes e
+                        JOIN materias m ON e.materia_id = m.id
+                        WHERE e.profesor_dni = %s AND e.curso_id = %s
+                    """, (profesor_id, curso_id))
+                    return cursor.fetchall()
+        except Exception as e:
+            print(f"Error al obtener exámenes por profesor y curso: {e}")
+            return []

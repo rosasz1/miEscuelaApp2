@@ -1,3 +1,4 @@
+
 {% extends "base_dashboard.html" %}
 
 {% block title %}Crear Examen{% endblock %}
@@ -5,57 +6,67 @@
 {% block panel_title %}Registrar Examen{% endblock %}
 
 {% block sidebar %}
-  {% include 'profesor/partials/sidebar.html' %}
+  {% include 'profesor/sidebar.html' %}
 {% endblock %}
-
 
 {% block content %}
-<h4 class="mb-4">📘 Crear nuevo examen</h4>
+<div class="d-flex justify-content-center">
+  <div class="card p-5 shadow-lg" style="max-width: 700px; width: 100%;">
+    <h4 class="mb-4 text-primary fw-bold">📘 Crear nuevo examen</h4>
 
-<form method="POST" class="card p-4" style="max-width: 600px;">
-  <div class="mb-3">
-    <label for="curso_id" class="form-label">Curso</label>
-    <select name="curso_id" id="curso_id" class="form-select" onchange="this.form.submit()" required>
-      <option disabled selected value="">Seleccioná un curso</option>
-      {% for cid, nombre in cursos %}
-        <option value="{{ cid }}" {% if request.form.curso_id == cid|string %}selected{% endif %}>{{ nombre }}</option>
-      {% endfor %}
-    </select>
+    <form method="POST">
+      <div class="mb-3">
+        <label for="curso_id" class="form-label">Curso</label>
+        <select name="curso_id" id="curso_id" class="form-select" onchange="this.form.submit()" required>
+          <option disabled selected value="">Seleccioná un curso</option>
+          {% for curso in cursos %}
+            <option value="{{ curso[0] }}" {% if request.form.curso_id == curso[0]|string %}selected{% endif %}>
+              {{ curso[1] }}
+            </option>
+          {% endfor %}
+        </select>
+      </div>
+
+      {% if materia_horarios %}
+      <div class="mb-3">
+        <label for="materia_id" class="form-label">Materia</label>
+        <select name="materia_id" id="materia_id" class="form-select" onchange="this.form.submit()" required>
+          <option disabled selected value="">Seleccioná una materia</option>
+          {% for materia in materias %}
+            <option value="{{ materia[0] }}" {% if request.form.materia_id == materia[0]|string %}selected{% endif %}>
+              {{ materia[1] }}
+            </option>
+          {% endfor %}
+        </select>
+      </div>
+
+      {% if request.form.materia_id %}
+      <div class="mb-3">
+        <label for="fecha" class="form-label">Fecha</label>
+        <input type="date" name="fecha" id="fecha" class="form-control" required>
+      </div>
+
+      <div class="mb-3">
+        <label for="hora" class="form-label">Hora</label>
+        <select name="hora" id="hora" class="form-select" required>
+          {% set materia_id = request.form.materia_id | int %}
+          {% for h in horarios_disponibles %}
+            <option value="{{ h[1] }}">{{ h[0] }} - {{ h[1] }} a {{ h[2] }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="mb-3">
+        <label for="titulo" class="form-label">Título o descripción</label>
+        <input type="text" name="titulo" id="titulo" class="form-control">
+      </div>
+
+      <div class="text-end">
+        <button type="submit" class="btn btn-success px-4">💾 Guardar Examen</button>
+      </div>
+      {% endif %}
+      {% endif %}
+    </form>
   </div>
-
-  {% if horarios_disponibles %}
-  <div class="mb-3">
-    <label for="materia_id" class="form-label">Materia</label>
-    <select name="materia_id" id="materia_id" class="form-select" required>
-      {% for mid, nombre in materias %}
-        <option value="{{ mid }}">{{ nombre }}</option>
-      {% endfor %}
-    </select>
-  </div>
-
-  <div class="mb-3">
-    <label for="fecha" class="form-label">Fecha</label>
-    <input type="date" name="fecha" id="fecha" class="form-control" required>
-  </div>
-
-  <div class="mb-3">
-    <label for="hora" class="form-label">Hora</label>
-    <select name="hora" id="hora" class="form-select" required>
-      {% for h in horarios_disponibles %}
-        <option value="{{ h[2].strftime('%H:%M') }}">
-          {{ h[1] }} - {{ h[2].strftime('%H:%M') }} a {{ h[3].strftime('%H:%M') }}
-        </option>
-      {% endfor %}
-    </select>
-  </div>
-
-  <div class="mb-3">
-    <label for="titulo" class="form-label">Título o descripción</label>
-    <input type="text" name="titulo" id="titulo" class="form-control">
-  </div>
-
-  <button type="submit" class="btn btn-success">Guardar Examen</button>
-  {% endif %}
-</form>
+</div>
 {% endblock %}
-

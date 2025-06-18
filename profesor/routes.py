@@ -1,10 +1,14 @@
+
 from backend.examenDAO import ExamenDAO
 from flask import Blueprint, render_template, request, redirect, url_for, session, flash
 from backend.usuarioDAO import UsuarioDAO
 from backend.plan_academico import PlanAcademicoDAO
 from collections import defaultdict
+from datetime import date, timedelta
+
 
 profesor_bp = Blueprint('profesor', __name__, url_prefix='/profesor', template_folder='templates')
+
 
 def validar_rol(roles):
     if 'usuario' not in session:
@@ -17,13 +21,18 @@ def redireccion_no_autorizado():
     flash("No autorizado")
     return redirect(url_for('auth.login'))
 
+# ========================
+# 🏠 DASHBOARD
+# ========================
 @profesor_bp.route('/dashboard')
 def dashboard():
     if not validar_rol('profesor'):
         return redireccion_no_autorizado()
     return render_template('profesor/dashboard.html')
 
-# ----- NOTAS -----
+# ========================
+# 📝 NOTAS
+# ========================
 @profesor_bp.route('/notas', methods=['GET', 'POST'])
 def ver_notas():
     if not validar_rol('profesor'):
@@ -34,7 +43,6 @@ def ver_notas():
         profesor_dni = session['usuario']['dni']
         notas = UsuarioDAO.obtener_notas_por_profesor(profesor_dni, dni_alumno)
     return render_template("profesor/ver_notas_alumno.html", notas=notas)
-
 
 @profesor_bp.route('/agregar-nota', methods=['GET', 'POST'])
 def agregar_nota():
@@ -62,7 +70,9 @@ def actualizar_nota():
         return redirect(url_for('profesor.dashboard'))
     return render_template("profesor/actualizar_nota.html")
 
-# ----- ASISTENCIAS -----
+# ========================
+# 📋 ASISTENCIAS
+# ========================
 @profesor_bp.route('/ver-asistencias', methods=['GET', 'POST'])
 def ver_asistencias():
     if not validar_rol('profesor'):
@@ -99,9 +109,79 @@ def modificar_asistencia():
         return redirect(url_for('profesor.dashboard'))
     return render_template("profesor/modificar_asistencia.html")
 
+# ========================
+# 📆 CRONOGRAMA
+# ========================
+@profesor_bp.route("/cronograma", methods=["GET", "POST"])
+def cronograma_profesor():
+    if not validar_rol('profesor'):
+        return redireccion_no_autorizado()
+
+    profesor_id = session['usuario']['id']
+    cursos = PlanAcademicoDAO.obtener_cursos_por_profesor(profesor_id)
+    curso_id = None
+    cronograma = []
+    examenes = []
+    fechas_semana = {}
+
+    dias_semana = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes']
+    horas = [f"{h}:00" for h in range(8, 19)]
+    cronograma_dict = {dia: {hora: [] for hora in horas} for dia in dias_semana}
+
+    try:
+        if request.method == 'POST':
+            curso_id = int(request.form['curso_id'])
+        elif cursos:
+            curso_id = cursos[0].id
+
+        if curso_id:
+            cronograma = PlanAcademicoDAO.obtener_horarios_por_curso(curso_id)
+            examenes = ExamenDAO.obtener_examenes_por_profesor_y_curso(profesor_id, curso_id)
+            fechas_semana = obtener_fechas_semana_actual()
+
+            for materia, dia, h_ini, h_fin in cronograma:
+                for h in range(int(h_ini.split(":")[0]), int(h_fin.split(":")[0])):
+                    hora_str = f"{h}:00"
+                    if dia in cronograma_dict and hora_str in cronograma_dict[dia]:
+                        cronograma_dict[dia][hora_str].append({
+                            "nombre": materia,
+                            "tipo": "materia"
+                        })
+
+            for ex in examenes:
+                dia = ex['fecha'].strftime("%A").capitalize()
+                hora = ex['hora'].strftime("%H:%M")
+                if dia in cronograma_dict and hora in cronograma_dict[dia]:
+                    cronograma_dict[dia][hora].append({
+                        "nombre": f"Ex: {ex['materia']}",
+                        "tipo": "examen"
+                    })
+
+    except Exception as e:
+        flash("Error al cargar el cronograma")
+        print("🔥 Error en cronograma_profesor:", e)
+
+    return render_template("profesor/cronograma_profesor.html",
+                           cursos=cursos,
+                           curso_seleccionado=curso_id,
+                           cronograma=cronograma_dict,
+                           examenes=examenes,
+                           fechas_semana=fechas_semana,
+                           dias_semana=dias_semana,
+                           horas=horas)
+
+def obtener_fechas_semana_actual():
+    hoy = date.today()
+    inicio_semana = hoy - timedelta(days=hoy.weekday())
+    dias = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"]
+    return {dias[i]: (inicio_semana + timedelta(days=i)) for i in range(5)}
+
+# ========================
+# 🧪 EXÁMENES
+# ========================
 @profesor_bp.route('/crear-examen', methods=['GET', 'POST'])
 def crear_examen():
-    if not validar_rol(['admin', 'profesor']):
+    if not validar_rol('profesor'):
         return redireccion_no_autorizado()
 
     cursos = PlanAcademicoDAO.obtener_cursos_con_anio()
@@ -124,28 +204,29 @@ def crear_examen():
         elif curso_id:
             materias, materia_horarios = obtener_materias_y_horarios_por_curso(curso_id)
 
+        if materia_id:
+            horarios_disponibles = materia_horarios.get(int(materia_id), [])
+
     return render_template(
-        'admin/crear_examen.html',
+        'profesor/crear_examen.html',
         cursos=cursos,
         materias=materias,
-        materia_horarios=materia_horarios
+        materia_horarios=materia_horarios,
+        horarios_disponibles=horarios_disponibles
     )
-
-
-
 def obtener_materias_y_horarios_por_curso(curso_id):
     datos = PlanAcademicoDAO.obtener_horarios_por_curso(curso_id)
 
     materias = []
-    materia_horarios = []
+    materia_horarios = defaultdict(list)
 
     for mid, nombre, dia, h_ini, h_fin in datos:
         if (mid, nombre) not in materias:
             materias.append((mid, nombre))
-
-        materia_horarios.append((mid, nombre, dia, h_ini, h_fin))
+        materia_horarios[mid].append((dia, h_ini, h_fin))
 
     return materias, materia_horarios
+
 
 
 @profesor_bp.route("/ver-examenes")
@@ -157,55 +238,15 @@ def ver_examenes():
     examenes = ExamenDAO.obtener_examenes_por_profesor(profesor_id)
     return render_template("profesor/ver_examenes_profesor.html", examenes=examenes)
 
-@profesor_bp.route("/cronograma")
-def cronograma_profesor():
-    if not validar_rol('profesor'):
-        return redireccion_no_autorizado()
+def obtener_materias_y_horarios_por_curso(curso_id):
+    datos = PlanAcademicoDAO.obtener_horarios_por_curso(curso_id)
 
-    profesor_id = session['usuario']['id']
-    curso_id = request.args.get("curso_id", type=int)
+    materias = []
+    materia_horarios = defaultdict(list)
 
-    cursos = PlanAcademicoDAO.obtener_cursos_por_profesor(profesor_id)
+    for mid, nombre, dia, h_ini, h_fin in datos:
+        if (mid, nombre) not in materias:
+            materias.append((mid, nombre))
+        materia_horarios[mid].append((dia, h_ini, h_fin))
 
-    if not cursos:
-        curso_id = PlanAcademicoDAO.insertar_curso_con_materia_para_profesor(profesor_id)
-        cursos = PlanAcademicoDAO.obtener_cursos_por_profesor(profesor_id)
-
-    if not curso_id and cursos:
-        curso_id = cursos[0].id
-
-    materias, horarios = obtener_materias_y_horarios_por_curso(curso_id)
-
-    examenes = ExamenDAO.obtener_examenes_por_profesor_y_curso(profesor_id, curso_id)
-
-    dias_semana = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes']
-    horas = [f"{h}:00" for h in range(8, 19)]
-    cronograma = {dia: {hora: [] for hora in horas} for dia in dias_semana}
-
-    for materia, dia, h_ini, h_fin in horarios:
-        for h in range(int(h_ini.split(":")[0]), int(h_fin.split(":")[0])):
-            hora_str = f"{h}:00"
-            if hora_str in cronograma[dia]:
-                cronograma[dia][hora_str].append({
-                    "nombre": materia,
-                    "tipo": "materia"
-                })
-
-    for ex in examenes:
-        dia = ex['fecha'].strftime("%A").capitalize()
-        hora = ex['hora_inicio'].strftime("%H:%M")
-        if dia in cronograma and hora in cronograma[dia]:
-            cronograma[dia][hora].append({
-                "nombre": f"Ex: {ex['materia']}",
-                "tipo": "examen"
-            })
-
-    return render_template("profesor/cronograma_profesor.html",
-                           cursos=cursos,
-                           curso_seleccionado=curso_id,
-                           cronograma=cronograma,
-                           dias_semana=dias_semana,
-                           horas=horas)
-
-
-
+    return materias, materia_horarios

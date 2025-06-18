@@ -1,3 +1,4 @@
+
 <div class="accordion" id="sidebarAccordionProfesor">
 
 <a href="{{ url_for('profesor.dashboard') }}" class="text-white text-center d-block fw-bold mb-3" style="font-size: 18px; text-decoration: none;">
@@ -50,6 +51,21 @@
       </div>
     </div>
   </div>
+
+  <!-- Cronograma -->
+  <div class="accordion-item mt-2">
+    <h2 class="accordion-header" id="headingCronograma">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseCronograma">
+        Cronograma
+      </button>
+    </h2>
+    <div id="collapseCronograma" class="accordion-collapse collapse">
+      <div class="accordion-body p-2">
+        <a href="{{ url_for('profesor.cronograma_profesor') }}" class="d-block mb-1">Ver cronograma</a>
+      </div>
+    </div>
+  </div>
+
 </div>
 
 <hr>
