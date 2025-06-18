@@ -1,0 +1,134 @@
+
+/* === Fondo global con degradado igual al admin === */
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: 'Segoe UI', sans-serif;
+  background: linear-gradient(to bottom right, #1de9b6, #81d4fa);
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  background-size: cover;
+  color: #212121;
+}
+
+.d-flex {
+  display: flex;
+  min-height: 100vh;
+  overflow: hidden;
+}
+
+/* === Sidebar sin fondo (espacio reservado) === */
+.sidebar {
+  width: 250px;
+  padding: 1rem;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  overflow-y: auto;
+  z-index: 1000;
+  color: #ffffff;
+}
+
+/* === Sidebar enlaces === */
+.sidebar a {
+  display: block;
+  text-decoration: none;
+  color: #004d40;
+  background-color: rgba(255, 255, 255, 0.9);
+  padding: 10px 12px;
+  border-radius: 8px;
+  margin-bottom: 8px;
+  font-weight: bold;
+  font-size: 15px;
+  transition: background-color 0.2s;
+}
+
+.sidebar a:hover {
+  background-color: #e0f7fa;
+  color: #00796b;
+}
+
+/* === Main content sin fondo blanco para que se vea el degradado === */
+.main-content {
+  margin-left: 300px;
+  padding: 3rem;
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+
+/* === Títulos y formularios === */
+h1, h3, h4, h5 {
+  color: #004d40;
+  font-weight: bold;
+}
+
+form label {
+  font-weight: 500;
+  margin-top: 0.5rem;
+  display: block;
+}
+
+select, input[type="text"], input[type="date"], input[type="time"] {
+  padding: 0.5rem;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  width: 100%;
+  max-width: 300px;
+  margin-bottom: 1rem;
+}
+
+/* === Botones === */
+button, .btn {
+  padding: 10px 16px;
+  font-weight: bold;
+  border-radius: 8px;
+  border: none;
+  background-color: #00796b;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+button:hover, .btn:hover {
+  background-color: #004d40;
+}
+
+/* === Cronograma === */
+.cronograma .dia {
+  margin-bottom: 2rem;
+}
+
+.cronograma h3 {
+  border-bottom: 2px solid #4DD0E1;
+  padding-bottom: 4px;
+  margin-bottom: 0.5rem;
+}
+
+.cronograma ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+.cronograma li {
+  padding: 4px 0;
+}
+
+.evento {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.evento.materia {
+  background-color: #d0f0fd;
+  color: #01579b;
+}
+
+.evento.examen {
+  background-color: #ffcdd2;
+  color: #c62828;
+}
