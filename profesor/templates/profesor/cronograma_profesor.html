@@ -1,52 +1,54 @@
+{% extends 'base_dashboard.html' %}
 
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>Cronograma del Profesor</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-</head>
-<body>
-    {% include 'profesor/sidebar.html' %}
+{% block panel_title %}
+Cronograma por Curso
+{% endblock %}
 
-    <div class="main-content">
-        <h1>Cronograma de Exámenes</h1>
+{% block content %}
+<div class="container">
+  <form method="get" action="{{ url_for('profesor.cronograma_profesor') }}" class="mb-4">
+    <label for="curso_id" class="form-label">Seleccionar curso:</label>
+    <select name="curso_id" id="curso_id" class="form-select w-auto d-inline" onchange="this.form.submit()">
+      {% for curso in cursos %}
+        <option value="{{ curso.id }}" {% if curso.id == curso_seleccionado %}selected{% endif %}>
+          {{ curso.nombre }}
+        </option>
+      {% endfor %}
+    </select>
+  </form>
 
-        <form method="get" action="{{ url_for('profesor.cronograma_profesor') }}">
-            <label for="curso_id">Seleccionar curso:</label>
-            <select name="curso_id" id="curso_id" onchange="this.form.submit()">
-                {% for curso in cursos %}
-                    <option value="{{ curso.id }}" {% if curso.id == curso_seleccionado %}selected{% endif %}>
-                        {{ curso.nombre }}
-                    </option>
-                {% endfor %}
-            </select>
-        </form>
-
-        <div class="cronograma">
+  <div class="table-responsive">
+    <table class="table table-bordered table-hover align-middle text-center">
+      <thead class="table-primary">
+        <tr>
+          <th>Hora / Día</th>
+          {% for dia in dias_semana %}
+            <th>{{ dia }}</th>
+          {% endfor %}
+        </tr>
+      </thead>
+      <tbody>
+        {% for hora in horas %}
+          <tr>
+            <th class="table-light">{{ hora }}</th>
             {% for dia in dias_semana %}
-                <div class="dia">
-                    <h3>{{ dia }}</h3>
-                    <ul>
-                        {% for hora in horas %}
-                            <li>
-                                <strong>{{ hora }}:</strong>
-                                {% set eventos = cronograma[dia][hora] %}
-                                {% if eventos %}
-                                    {% for ev in eventos %}
-                                        <span class="evento {% if ev.tipo == 'examen' %}examen{% else %}materia{% endif %}">
-                                            {{ ev.nombre }}
-                                        </span>
-                                    {% endfor %}
-                                {% else %}
-                                    -
-                                {% endif %}
-                            </li>
-                        {% endfor %}
-                    </ul>
-                </div>
+              {% set eventos = cronograma[dia][hora] %}
+              <td>
+                {% if eventos %}
+                  {% for ev in eventos %}
+                    <div class="badge {% if ev.tipo == 'examen' %}bg-danger{% else %}bg-info text-dark{% endif %} mb-1">
+                      {{ ev.nombre }}
+                    </div><br>
+                  {% endfor %}
+                {% else %}
+                  <span class="text-muted">-</span>
+                {% endif %}
+              </td>
             {% endfor %}
-        </div>
-    </div>
-</body>
-</html>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

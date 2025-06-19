@@ -1,74 +1,182 @@
+<!-- Overlay -->
+<div id="sidebarOverlay" class="sidebar-overlay"></div>
 
-<div class="accordion" id="sidebarAccordionProfesor">
+<!-- Botón fijo siempre visible -->
+<button id="menuToggleBtn" class="menu-toggle">☰ Menú</button>
 
-<a href="{{ url_for('profesor.dashboard') }}" class="text-white text-center d-block fw-bold mb-3" style="font-size: 18px; text-decoration: none;">
-  Panel Profesor
-</a>
+<!-- Sidebar desplegable -->
+<div class="sidebar-panel" id="sidebarPanel">
+  <div class="sidebar-content">
+    <a href="{{ url_for('profesor.dashboard') }}" class="dashboard-link">🏠 Volver al Dashboard</a>
 
-  <!-- Notas -->
-  <div class="accordion-item">
-    <h2 class="accordion-header" id="headingNotas">
-      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseNotas">
-        Notas
-      </button>
-    </h2>
-    <div id="collapseNotas" class="accordion-collapse collapse">
-      <div class="accordion-body p-2">
-        <a href="{{ url_for('profesor.ver_notas') }}" class="d-block mb-1">Ver notas</a>
-        <a href="{{ url_for('profesor.agregar_nota') }}" class="d-block mb-1">Agregar nota</a>
-        <a href="{{ url_for('profesor.actualizar_nota') }}" class="d-block mb-1">Actualizar nota</a>
-      </div>
+    <button class="accordion-section">📘 Notas</button>
+    <div class="panel-links">
+      <a href="{{ url_for('profesor.ver_notas') }}">📄 Ver notas</a>
+      <a href="{{ url_for('profesor.agregar_nota') }}">➕ Agregar nota</a>
     </div>
-  </div>
 
-  <!-- Asistencias -->
-  <div class="accordion-item mt-2">
-    <h2 class="accordion-header" id="headingAsistencias">
-      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseAsistencias">
-        Asistencias
-      </button>
-    </h2>
-    <div id="collapseAsistencias" class="accordion-collapse collapse">
-      <div class="accordion-body p-2">
-        <a href="{{ url_for('profesor.ver_asistencias') }}" class="d-block mb-1">Ver asistencias</a>
-        <a href="{{ url_for('profesor.registrar_asistencia') }}" class="d-block mb-1">Registrar asistencia</a>
-        <a href="{{ url_for('profesor.modificar_asistencia') }}" class="d-block mb-1">Modificar asistencia</a>
-      </div>
+    <button class="accordion-section">📅 Asistencias</button>
+    <div class="panel-links">
+      <a href="{{ url_for('profesor.modificar_asistencia') }}">📋 Ver asistencias</a>
+      <a href="{{ url_for('profesor.registrar_asistencia') }}">🖊 Registrar asistencia</a>
     </div>
-  </div>
 
-  <!-- Exámenes -->
-  <div class="accordion-item mt-2">
-    <h2 class="accordion-header" id="headingExamenes">
-      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExamenes">
-        Exámenes
-      </button>
-    </h2>
-    <div id="collapseExamenes" class="accordion-collapse collapse">
-      <div class="accordion-body p-2">
-        <a href="{{ url_for('profesor.crear_examen') }}" class="d-block mb-1">Registrar examen</a>
-        <a href="{{ url_for('profesor.ver_examenes') }}" class="d-block mb-1">Ver mis exámenes</a>
-      </div>
+    <button class="accordion-section">🧪 Exámenes</button>
+    <div class="panel-links">
+      <a href="{{ url_for('profesor.crear_examen') }}">📝 Crear examen</a>
+      <a href="{{ url_for('profesor.ver_examenes') }}">📊 Ver exámenes</a>
     </div>
-  </div>
 
-  <!-- Cronograma -->
-  <div class="accordion-item mt-2">
-    <h2 class="accordion-header" id="headingCronograma">
-      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseCronograma">
-        Cronograma
-      </button>
-    </h2>
-    <div id="collapseCronograma" class="accordion-collapse collapse">
-      <div class="accordion-body p-2">
-        <a href="{{ url_for('profesor.cronograma_profesor') }}" class="d-block mb-1">Ver cronograma</a>
-      </div>
-    </div>
+    <a href="{{ url_for('auth.logout') }}" class="cerrar-sesion">🔴 Cerrar sesión</a>
   </div>
-
 </div>
 
-<hr>
-<div class="logout-container">
-  <a href="{{ url_for('auth.logout') }}" class="logout-btn">🔴 Cerrar sesión</a>
-</div>
+<style>
+  .menu-toggle {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 3000;
+    background-color: #0277bd;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 10px 16px;
+    font-weight: bold;
+    font-size: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  .menu-toggle:hover {
+    background-color: #01579b;
+  }
+
+  .sidebar-overlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    background-color: rgba(0,0,0,0.3);
+    backdrop-filter: blur(2px);
+    z-index: 1000;
+    display: none;
+  }
+
+  .sidebar-panel {
+    position: fixed;
+    top: 0;
+    left: -300px;
+    width: 270px;
+    height: 100vh;
+    background: rgba(255, 255, 255, 0.45);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.3);
+    padding: 20px;
+    z-index: 2000;
+    transition: left 0.3s ease;
+    border-top-right-radius: 16px;
+    border-bottom-right-radius: 16px;
+  }
+
+  .sidebar-panel.open {
+    left: 0;
+  }
+
+  .sidebar-content {
+    margin-top: 50px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .dashboard-link, .cerrar-sesion {
+    display: block;
+    text-align: center;
+    font-weight: bold;
+    padding: 10px;
+    border-radius: 10px;
+    text-decoration: none;
+    transition: background-color 0.3s;
+  }
+
+  .dashboard-link {
+    background: white;
+    color: #0277bd;
+  }
+
+  .cerrar-sesion {
+    background-color: crimson;
+    color: white;
+    margin-top: 20px;
+  }
+
+  .accordion-section {
+    background-color: #00695c;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 10px;
+    font-weight: bold;
+    text-align: left;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  .accordion-section:hover {
+    background-color: #00796b;
+  }
+
+  .panel-links {
+    display: none;
+    padding-left: 10px;
+  }
+
+  .panel-links.active {
+    display: block;
+  }
+
+  .panel-links a {
+    display: block;
+    padding: 6px;
+    text-decoration: none;
+    color: #004d40;
+    background: #ffffff;
+    border-radius: 6px;
+    margin-top: 4px;
+    font-size: 14px;
+    transition: background 0.3s;
+  }
+
+  .panel-links a:hover {
+    background-color: #e0f2f1;
+  }
+</style>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const toggleBtn = document.getElementById("menuToggleBtn");
+    const sidebar = document.getElementById("sidebarPanel");
+    const overlay = document.getElementById("sidebarOverlay");
+
+    toggleBtn.addEventListener("click", () => {
+      const isOpen = sidebar.classList.contains("open");
+      sidebar.classList.toggle("open", !isOpen);
+      overlay.style.display = isOpen ? "none" : "block";
+    });
+
+    overlay.addEventListener("click", () => {
+      sidebar.classList.remove("open");
+      overlay.style.display = "none";
+    });
+
+    document.querySelectorAll(".accordion-section").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const panel = btn.nextElementSibling;
+        if (panel.classList.contains("panel-links")) {
+          panel.classList.toggle("active");
+        }
+      });
+    });
+  });
+</script>
