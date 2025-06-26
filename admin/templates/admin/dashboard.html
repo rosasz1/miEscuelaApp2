@@ -2,94 +2,66 @@
 
 {% block title %}Panel Admin{% endblock %}
 
-{% block panel_header %}
-<a href="{{ url_for('admin.dashboard') }}" class="text-white text-decoration-none">Panel Admin</a>
-{% endblock %}
-
-
 {% block sidebar %}
-  {% include 'admin/sidebar_menu_admin.html' %}
+  {% include 'admin/sidebar_admin.html' %}
 {% endblock %}
 
 {% block content %}
 <div class="main-content">
-
-  <div class="text-center">
-    <h4 class="mb-4">👋 ¡Hola {{ nombre }}!</h4>
-    <p>Usá el menú lateral o los accesos rápidos para gestionar el sistema.</p>
+  <div class="dashboard-header">
+    <div class="dashboard-title-container">
+      <h1 class="dashboard-title">Panel de Administración</h1>
+      <p class="dashboard-welcome">Bienvenido{{ nombre and ', ' ~ nombre|capitalize }}, accedé a la gestión integral del sistema educativo.</p>
+    </div>
+    <div class="dashboard-divider"></div>
+    <p class="dashboard-sub">Desde aquí podés administrar usuarios, materias, exámenes y más.</p>
   </div>
 
-  <!-- Estadísticas rápidas -->
-  <div class="row mt-5">
-    <div class="col-md-3">
-      <div class="card text-white bg-primary mb-3 shadow">
-        <div class="card-body text-center">
-          <h5 class="card-title">👥 Alumnos</h5>
-          <p class="card-text fs-4">{{ total_alumnos }}</p>
-        </div>
+  <div class="cards-wrapper">
+    <div class="cards-grid">
+      <div class="card stat alumnos">
+        <i class="bi bi-people-fill icon"></i>
+        <div class="label">Alumnos</div>
+        <div class="value">{{ total_alumnos }}</div>
       </div>
-    </div>
-    <div class="col-md-3">
-      <div class="card text-white bg-success mb-3 shadow">
-        <div class="card-body text-center">
-          <h5 class="card-title">🧑‍🏫 Profesores</h5>
-          <p class="card-text fs-4">{{ total_profesores }}</p>
-        </div>
+      <div class="card stat profesores">
+        <i class="bi bi-person-badge-fill icon"></i>
+        <div class="label">Profesores</div>
+        <div class="value">{{ total_profesores }}</div>
       </div>
-    </div>
-    <div class="col-md-3">
-      <div class="card text-white bg-info mb-3 shadow">
-        <div class="card-body text-center">
-          <h5 class="card-title">📚 Materias</h5>
-          <p class="card-text fs-4">{{ total_materias }}</p>
-        </div>
+      <div class="card stat materias">
+        <i class="bi bi-book-fill icon"></i>
+        <div class="label">Materias</div>
+        <div class="value">{{ total_materias }}</div>
       </div>
-    </div>
-    <div class="col-md-3">
-      <div class="card text-white bg-warning mb-3 shadow">
-        <div class="card-body text-center">
-          <h5 class="card-title">📝 Exámenes esta semana</h5>
-          <p class="card-text fs-4">{{ total_examenes }}</p>
-        </div>
+      <div class="card stat examenes">
+        <i class="bi bi-journal-check icon"></i>
+        <div class="label">Exámenes</div>
+        <div class="value">{{ total_examenes }}</div>
       </div>
     </div>
   </div>
 
-  <!-- Últimas acciones -->
-  <div class="mt-4">
-    <h5>🕒 Últimas acciones recientes</h5>
-    <ul class="list-group shadow-sm">
+
+
+  <div class="quick-access">
+    <a href="{{ url_for('admin.ver_materias') }}" class="btn quick">📚 Materias</a>
+    <a href="{{ url_for('admin.crear_usuario') }}" class="btn quick">👤 Crear Usuario</a>
+    <a href="{{ url_for('admin.crear_examen') }}" class="btn quick">📝 Registrar Examen</a>
+  </div>
+
+  <div class="recent-actions">
+    <h4>Últimas acciones</h4>
+    <ul>
       {% for desc, tipo, fecha in acciones %}
-        <li class="list-group-item">
-          {% if tipo == 'creacion' %}
-            ✅ {{ desc }}
-          {% elif tipo == 'asignacion' %}
-            📌 {{ desc }}
-          {% elif tipo == 'eliminacion' %}
-            ❌ {{ desc }}
-          {% else %}
-            📎 {{ desc }}
-          {% endif %}
-          <span class="text-muted small float-end">{{ fecha.strftime('%d/%m %H:%M') }}</span>
+        <li>
+          <span class="tag {{ tipo }}">{{ desc }}</span>
+          <span class="timestamp">{{ fecha.strftime('%d/%m %H:%M') }}</span>
         </li>
       {% else %}
-        <li class="list-group-item text-muted">No hay acciones recientes registradas.</li>
+        <li class="text-muted">No hay acciones recientes.</li>
       {% endfor %}
     </ul>
   </div>
-
-  <!-- Botones de acceso rápido -->
-  <div class="row mt-5 justify-content-center">
-    <div class="col-md-3 mb-3">
-      <a href="{{ url_for('admin.ver_materias') }}" class="btn btn-outline-primary w-100">📚 Materias</a>
-    </div>
-    <div class="col-md-3 mb-3">
-      <a href="{{ url_for('admin.crear_usuario') }}" class="btn btn-outline-success w-100">👤 Crear Usuario</a>
-    </div>
-    <div class="col-md-3 mb-3">
-      <a href="{{ url_for('admin.crear_examen') }}" class="btn btn-outline-warning w-100">📝 Registrar Examen</a>
-    </div>
-  </div>
-
 </div>
 {% endblock %}

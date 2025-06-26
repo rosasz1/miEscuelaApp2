@@ -1,44 +1,325 @@
-<div class="sidebar">
-  <div class="menu-section">
-    <div class="menu-header" onclick="toggleMenu(this)">📚 Materias y Horarios</div>
-    <div class="submenu">
-      <a href="{{ url_for('admin.ver_materias') }}">Ver materias</a>
-      <a href="{{ url_for('admin.crear_materia') }}">Crear materia</a>
-      <a href="{{ url_for('admin.editar_materia', materia_id=1) }}">Editar materia</a>
-      <a href="{{ url_for('admin.ver_cronograma') }}">Gestionar horarios</a>
+<!-- Overlay -->
+<div id="sidebarOverlay" class="sidebar-overlay"></div>
+
+<!-- Botón fijo siempre visible -->
+<button id="menuToggleBtn" class="menu-toggle">
+  <i class="bi bi-list"></i>
+</button>
+
+<!-- Sidebar desplegable -->
+<div class="sidebar-panel" id="sidebarPanel">
+  <div class="sidebar-content">
+    <a href="{{ url_for('admin.dashboard') }}" class="dashboard-link">
+      <i class="bi bi-house-door sidebar-icon"></i> Inicio Dashboard
+    </a>
+
+    <!-- Materias y Horarios -->
+    <button class="accordion-section">
+      <i class="bi bi-journal-bookmark sidebar-icon"></i> Materias y Horarios
+    </button>
+    <div class="panel-links">
+      <a href="{{ url_for('admin.ver_materias') }}"><i class="bi bi-list-ul sidebar-icon"></i> Ver materias</a>
+      <a href="{{ url_for('admin.crear_materia') }}"><i class="bi bi-plus-circle sidebar-icon"></i> Crear materia</a>
+      <a href="{{ url_for('admin.editar_materia', materia_id=1) }}"><i class="bi bi-pencil-square sidebar-icon"></i> Editar materia</a>
+      <a href="{{ url_for('admin.ver_cronograma') }}"><i class="bi bi-calendar-week sidebar-icon"></i> Gestionar horarios</a>
     </div>
-  </div>
-  <div class="menu-section">
-    <div class="menu-header" onclick="toggleMenu(this)">👥 Gestión de Usuarios</div>
-    <div class="submenu">
-      <a href="{{ url_for('admin.crear_usuario') }}">Crear usuario</a>
-      <a href="{{ url_for('admin.modificar_usuario') }}">Modificar usuario</a>
-      <a href="{{ url_for('admin.eliminar_usuario') }}">Eliminar usuario</a>
-      <a href="{{ url_for('admin.asignar_profesor') }}">Asignar profesor</a>
-      <a href="{{ url_for('admin.ver_notas') }}">Ver notas de alumno</a>
+
+    <!-- Gestión de Usuarios -->
+    <button class="accordion-section">
+      <i class="bi bi-people sidebar-icon"></i> Gestión de Usuarios
+    </button>
+    <div class="panel-links">
+      <a href="{{ url_for('admin.crear_usuario') }}"><i class="bi bi-person-plus sidebar-icon"></i> Crear usuario</a>
+      <a href="{{ url_for('admin.modificar_usuario') }}"><i class="bi bi-person-gear sidebar-icon"></i> Modificar usuario</a>
+      <a href="{{ url_for('admin.eliminar_usuario') }}"><i class="bi bi-person-dash sidebar-icon"></i> Eliminar usuario</a>
+      <a href="{{ url_for('admin.asignar_profesor') }}"><i class="bi bi-person-check sidebar-icon"></i> Asignar profesor</a>
+      <a href="{{ url_for('admin.ver_notas') }}"><i class="bi bi-journal-check sidebar-icon"></i> Ver notas de alumno</a>
     </div>
-  </div>
-  <div class="menu-section">
-    <div class="menu-header" onclick="toggleMenu(this)">📝 Exámenes</div>
-    <div class="submenu">
-      <a href="{{ url_for('admin.crear_examen') }}">Registrar examen</a>
-      <a href="{{ url_for('admin.ver_examenes') }}">Ver exámenes</a>
+
+    <!-- Exámenes -->
+    <button class="accordion-section">
+      <i class="bi bi-clipboard2-check sidebar-icon"></i> Exámenes
+    </button>
+    <div class="panel-links">
+      <a href="{{ url_for('admin.crear_examen') }}"><i class="bi bi-file-earmark-plus sidebar-icon"></i> Registrar examen</a>
+      <a href="{{ url_for('admin.ver_examenes') }}"><i class="bi bi-clipboard2-data sidebar-icon"></i> Ver exámenes</a>
     </div>
-  </div>
-  <div class="menu-section">
-    <div class="menu-header" onclick="toggleMenu(this)">📬 Comunicados</div>
-    <div class="submenu">
-      <a href="{{ url_for('comunicados.ver_comunicados') }}">Ver comunicados</a>
-      <a href="{{ url_for('comunicados.nuevo_comunicado') }}">Enviar comunicado</a>
+
+    <!-- Comunicados -->
+    <button class="accordion-section">
+      <i class="bi bi-megaphone sidebar-icon"></i> Comunicados
+    </button>
+    <div class="panel-links">
+      <a href="{{ url_for('comunicados.ver_comunicados') }}"><i class="bi bi-envelope-open sidebar-icon"></i> Ver comunicados</a>
+      <a href="{{ url_for('comunicados.nuevo_comunicado') }}"><i class="bi bi-send sidebar-icon"></i> Enviar comunicado</a>
     </div>
-  </div>
-  <div class="logout-container">
-    <a href="{{ url_for('auth.logout') }}" class="logout-btn">Cerrar sesión</a>
+
+    <!-- Cerrar sesión -->
+    <a href="{{ url_for('auth.logout') }}" class="cerrar-sesion">
+      <i class="bi bi-box-arrow-right sidebar-icon"></i> Cerrar sesión
+    </a>
   </div>
 </div>
 
-<script>
-  function toggleMenu(element) {
-    element.classList.toggle("open");
+<!-- ESTILOS -->
+<style>
+  .menu-toggle {
+    position: fixed;
+    top: 24px;
+    left: 24px;
+    z-index: 3000;
+    background: linear-gradient(135deg, #fff 70%, #e0f7fa 100%);
+    color: #0288d1;
+    border: 2px solid #b2ebf2;
+    border-radius: 50%;
+    width: 52px;
+    height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    box-shadow: 0 4px 18px rgba(30, 180, 219, 0.10);
+    cursor: pointer;
+    transition:
+      background 0.22s,
+      box-shadow 0.18s,
+      color 0.18s,
+      transform 0.18s;
+    padding: 0;
+    outline: none;
+    /* Pulse effect */
+    animation: menu-pulse 1.7s infinite;
   }
+  .menu-toggle:hover {
+    background: linear-gradient(135deg, #e0f7fa 70%, #b2ebf2 100%);
+    color: #00bfae;
+    box-shadow: 0 8px 32px rgba(30, 180, 219, 0.22);
+    border-color: #4dd0e1;
+    transform: scale(1.07);
+    animation: none;
+  }
+  .menu-toggle.open,
+  .sidebar-panel.open ~ .menu-toggle {
+    animation: none;
+  }
+  .menu-toggle::before {
+    content: "";
+    display: none;
+  }
+  .menu-toggle .bi-list {
+    font-size: 2.1rem;
+    color: inherit;
+    display: block;
+    margin: 0;
+    padding: 0;
+  }
+
+  @keyframes menu-pulse {
+    0% {
+      box-shadow: 0 0 0 0 rgba(30, 180, 219, 0.13);
+    }
+    70% {
+      box-shadow: 0 0 0 10px rgba(30, 180, 219, 0.04);
+    }
+    100% {
+      box-shadow: 0 0 0 0 rgba(30, 180, 219, 0.13);
+    }
+  }
+
+  .sidebar-overlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    background-color: rgba(0,0,0,0.3);
+    backdrop-filter: blur(2px);
+    z-index: 1000;
+    display: none;
+  }
+
+  .sidebar-panel {
+    position: fixed;
+    top: 0;
+    left: -300px;
+    width: 260px;
+    height: 100vh;
+    background: rgba(255,255,255,0.65);
+    backdrop-filter: blur(12px);
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.10);
+    padding: 24px 0 0 0;
+    z-index: 2000;
+    transition: left 0.3s;
+    border-top-right-radius: 18px;
+    border-bottom-right-radius: 18px;
+    border-right: 1px solid #b2ebf2;
+  }
+
+  .sidebar-panel.open {
+    left: 0;
+  }
+
+  .sidebar-content {
+    margin-top: 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    padding: 0 18px;
+    padding-top: 32px;
+  }
+
+  .dashboard-link, .cerrar-sesion {
+    display: block;
+    text-align: center;
+    font-weight: 700;
+    padding: 12px 0;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: background-color 0.2s, color 0.2s;
+    margin-bottom: 8px;
+    font-size: 1.08rem;
+    letter-spacing: 0.01em;
+    margin-top: 24px; /* Reducido para que no baje tanto las tarjetas */
+  }
+
+  .dashboard-link {
+    background: rgba(129, 212, 250, 0.18);
+    color: #0288d1; /* Más vivo */
+    border: 1px solid rgba(129, 212, 250, 0.22);
+    font-weight: 800;
+  }
+
+  .dashboard-link:hover {
+    background: rgba(30, 233, 182, 0.22);
+    color: #00897b;
+  }
+
+  .cerrar-sesion {
+    background-color: #e53935;
+    color: white;
+    margin-top: 24px;
+    border: none;
+  }
+
+  .cerrar-sesion:hover {
+    background-color: #b71c1c;
+    color: #fff;
+  }
+
+  .accordion-section {
+    background-color: rgba(129, 212, 250, 0.28);
+    color: #0288d1; /* Más vivo */
+    font-weight: 700;
+    border: none;
+    border-radius: 8px;
+    padding: 11px 14px;
+    text-align: left;
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s;
+    margin-bottom: 2px;
+    font-size: 1.03rem;
+    letter-spacing: 0.01em;
+  }
+
+  .accordion-section:hover {
+    background-color: rgba(30, 233, 182, 0.22);
+    color: #00897b;
+  }
+
+  .panel-links {
+    display: block;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.35s cubic-bezier(.4,0,.2,1);
+    padding-left: 8px;
+    margin-bottom: 8px;
+  }
+  .panel-links.active {
+    max-height: 500px; /* suficiente para el contenido */
+    transition: max-height 0.35s cubic-bezier(.4,0,.2,1);
+  }
+
+  .panel-links a {
+    display: block;
+    padding: 8px 10px;
+    text-decoration: none;
+    color: #0288d1; /* Más vivo */
+    background: rgba(255,255,255,0.22);
+    border-radius: 6px;
+    margin-top: 4px;
+    font-size: 0.98rem;
+    font-weight: 600;
+    transition: background 0.2s, color 0.2s;
+  }
+
+  .panel-links a:hover {
+    background-color: rgba(30, 233, 182, 0.22);
+    color: #00897b;
+  }
+
+  .sidebar-icon {
+    font-size: 1.18em;
+    margin-right: 8px;
+    vertical-align: -2px;
+    /* color base para iconos principales */
+    color: #00bfae;
+    filter: brightness(1.2) saturate(1.5);
+  }
+
+  .dashboard-link .sidebar-icon,
+  .cerrar-sesion .sidebar-icon {
+    color: #0288d1;
+    filter: brightness(1.2) saturate(1.5);
+  }
+
+  .cerrar-sesion .sidebar-icon {
+    color: #fff;
+    filter: none;
+  }
+
+  .accordion-section .sidebar-icon {
+    color: #0288d1;
+    filter: brightness(1.2) saturate(1.5);
+  }
+
+  /* Cambia solo los iconos de las subtarjetas a gris moderno */
+  .panel-links a .sidebar-icon {
+    color: #455a64;
+    filter: none;
+  }
+</style>
+
+<!-- SCRIPT -->
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const toggleBtn = document.getElementById("menuToggleBtn");
+    const sidebar = document.getElementById("sidebarPanel");
+    const overlay = document.getElementById("sidebarOverlay");
+
+    toggleBtn.addEventListener("click", () => {
+      const isOpen = sidebar.classList.contains("open");
+      sidebar.classList.toggle("open", !isOpen);
+      overlay.style.display = isOpen ? "none" : "block";
+    });
+
+    overlay.addEventListener("click", () => {
+      sidebar.classList.remove("open");
+      overlay.style.display = "none";
+    });
+
+    // Acordeón exclusivo, pero permite cerrar la misma tarjeta
+    document.querySelectorAll(".accordion-section").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const panel = btn.nextElementSibling;
+        const isActive = panel.classList.contains("active");
+        // Cierra todas
+        document.querySelectorAll(".panel-links").forEach(p => p.classList.remove("active"));
+        // Si no estaba activa, la abre
+        if (!isActive) {
+          // Forzar reflujo para reiniciar la animación si se vuelve a abrir rápido
+          void panel.offsetWidth;
+          panel.classList.add("active");
+        }
+        // Si estaba activa, simplemente se cierra (no hace falta nada más)
+      });
+    });
+  });
 </script>
