@@ -134,6 +134,24 @@ body.login-page {
   color: #d84315;
   font-weight: bold;
 }
+html::-webkit-scrollbar, body::-webkit-scrollbar {
+  width: 8px;
+  background: #e0f7fa;
+  border-radius: 8px;
+}
+html::-webkit-scrollbar-thumb, body::-webkit-scrollbar-thumb {
+  background: #b3e5fc;
+  border-radius: 8px;
+}
+html::-webkit-scrollbar-thumb:hover, body::-webkit-scrollbar-thumb:hover {
+  background: #81d4fa;
+}
+html, body {
+  scrollbar-width: thin;
+  scrollbar-color: #b3e5fc #e0f7fa;
+}
+
+
 </style>
 
 

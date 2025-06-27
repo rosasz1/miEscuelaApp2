@@ -1,157 +1,47 @@
 <!-- Overlay -->
 <div id="sidebarOverlay" class="sidebar-overlay"></div>
 
-<!-- Botón fijo siempre visible -->
-<button id="menuToggleBtn" class="menu-toggle">☰ Menú</button>
+<!-- Botón menú igual al admin -->
+<button id="menuToggleBtn" class="menu-toggle" aria-label="Abrir menú">
+  <i class="bi bi-list"></i>
+</button>
 
 <!-- Sidebar desplegable -->
 <div class="sidebar-panel" id="sidebarPanel">
   <div class="sidebar-content">
-    <a href="{{ url_for('profesor.dashboard') }}" class="dashboard-link">🏠 Volver al Dashboard</a>
+    <a href="{{ url_for('profesor.dashboard') }}" class="dashboard-link">
+      <i class="bi bi-house-door sidebar-icon"></i> Volver al Dashboard
+    </a>
 
-    <button class="accordion-section">📘 Notas</button>
+    <button class="accordion-section">
+      <i class="bi bi-journal-bookmark sidebar-icon"></i> Notas
+    </button>
     <div class="panel-links">
-      <a href="{{ url_for('profesor.ver_notas') }}">📄 Ver notas</a>
-      <a href="{{ url_for('profesor.agregar_nota') }}">➕ Agregar nota</a>
+      <a href="{{ url_for('profesor.ver_notas') }}"><i class="bi bi-journal-text sidebar-icon"></i> Ver notas</a>
+      <a href="{{ url_for('profesor.agregar_nota') }}"><i class="bi bi-plus-circle sidebar-icon"></i> Agregar nota</a>
     </div>
 
-    <button class="accordion-section">📅 Asistencias</button>
+    <button class="accordion-section">
+      <i class="bi bi-clipboard2-check sidebar-icon"></i> Asistencias
+    </button>
     <div class="panel-links">
-      <a href="{{ url_for('profesor.modificar_asistencia') }}">📋 Ver asistencias</a>
-      <a href="{{ url_for('profesor.registrar_asistencia') }}">🖊 Registrar asistencia</a>
+      <a href="{{ url_for('profesor.modificar_asistencia') }}"><i class="bi bi-list-check sidebar-icon"></i> Ver asistencias</a>
+      <a href="{{ url_for('profesor.registrar_asistencia') }}"><i class="bi bi-pencil-square sidebar-icon"></i> Registrar asistencia</a>
     </div>
 
-    <button class="accordion-section">🧪 Exámenes</button>
+    <button class="accordion-section">
+      <i class="bi bi-journal-check sidebar-icon"></i> Exámenes
+    </button>
     <div class="panel-links">
-      <a href="{{ url_for('profesor.crear_examen') }}">📝 Crear examen</a>
-      <a href="{{ url_for('profesor.ver_examenes') }}">📊 Ver exámenes</a>
+      <a href="{{ url_for('profesor.crear_examen') }}"><i class="bi bi-file-earmark-plus sidebar-icon"></i> Crear examen</a>
+      <a href="{{ url_for('profesor.ver_examenes') }}"><i class="bi bi-clipboard2-data sidebar-icon"></i> Ver exámenes</a>
     </div>
 
-    <a href="{{ url_for('auth.logout') }}" class="cerrar-sesion">🔴 Cerrar sesión</a>
+    <a href="{{ url_for('auth.logout') }}" class="cerrar-sesion">
+      <i class="bi bi-box-arrow-right sidebar-icon"></i> Cerrar sesión
+    </a>
   </div>
 </div>
-
-<style>
-  .menu-toggle {
-    position: fixed;
-    top: 20px;
-    left: 20px;
-    z-index: 3000;
-    background-color: #0277bd;
-    color: white;
-    border: none;
-    border-radius: 10px;
-    padding: 10px 16px;
-    font-weight: bold;
-    font-size: 16px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-
-  .menu-toggle:hover {
-    background-color: #01579b;
-  }
-
-  .sidebar-overlay {
-    position: fixed;
-    top: 0; left: 0;
-    width: 100vw; height: 100vh;
-    background-color: rgba(0,0,0,0.3);
-    backdrop-filter: blur(2px);
-    z-index: 1000;
-    display: none;
-  }
-
-  .sidebar-panel {
-    position: fixed;
-    top: 0;
-    left: -300px;
-    width: 270px;
-    height: 100vh;
-    background: rgba(255, 255, 255, 0.45);
-    backdrop-filter: blur(10px);
-    box-shadow: 0 0 30px rgba(0, 0, 0, 0.3);
-    padding: 20px;
-    z-index: 2000;
-    transition: left 0.3s ease;
-    border-top-right-radius: 16px;
-    border-bottom-right-radius: 16px;
-  }
-
-  .sidebar-panel.open {
-    left: 0;
-  }
-
-  .sidebar-content {
-    margin-top: 50px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
-
-  .dashboard-link, .cerrar-sesion {
-    display: block;
-    text-align: center;
-    font-weight: bold;
-    padding: 10px;
-    border-radius: 10px;
-    text-decoration: none;
-    transition: background-color 0.3s;
-  }
-
-  .dashboard-link {
-    background: white;
-    color: #0277bd;
-  }
-
-  .cerrar-sesion {
-    background-color: crimson;
-    color: white;
-    margin-top: 20px;
-  }
-
-  .accordion-section {
-    background-color: #00695c;
-    color: white;
-    border: none;
-    border-radius: 10px;
-    padding: 10px;
-    font-weight: bold;
-    text-align: left;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-
-  .accordion-section:hover {
-    background-color: #00796b;
-  }
-
-  .panel-links {
-    display: none;
-    padding-left: 10px;
-  }
-
-  .panel-links.active {
-    display: block;
-  }
-
-  .panel-links a {
-    display: block;
-    padding: 6px;
-    text-decoration: none;
-    color: #004d40;
-    background: #ffffff;
-    border-radius: 6px;
-    margin-top: 4px;
-    font-size: 14px;
-    transition: background 0.3s;
-  }
-
-  .panel-links a:hover {
-    background-color: #e0f2f1;
-  }
-</style>
 
 <script>
   document.addEventListener("DOMContentLoaded", function () {
@@ -170,13 +60,29 @@
       overlay.style.display = "none";
     });
 
+    // Acordeón exclusivo, permite cerrar la misma tarjeta y animación de despliegue
     document.querySelectorAll(".accordion-section").forEach(btn => {
       btn.addEventListener("click", () => {
         const panel = btn.nextElementSibling;
-        if (panel.classList.contains("panel-links")) {
-          panel.classList.toggle("active");
+        const isActive = panel.classList.contains("active");
+        document.querySelectorAll(".panel-links").forEach(p => {
+          if (p !== panel) {
+            p.classList.remove("active");
+            p.style.maxHeight = null;
+          }
+        });
+        if (isActive) {
+          panel.classList.remove("active");
+          panel.style.maxHeight = null;
+        } else {
+          panel.classList.add("active");
+          panel.style.maxHeight = panel.scrollHeight + "px";
         }
       });
+    });
+
+    document.querySelectorAll(".panel-links.active").forEach(panel => {
+      panel.style.maxHeight = panel.scrollHeight + "px";
     });
   });
 </script>

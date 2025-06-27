@@ -11,8 +11,11 @@ def index():
 @auth_bp.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        dni = request.form['dni']
-        password = request.form['password']
+        dni = request.form.get('dni')
+        password = request.form.get('password')
+        if not dni or not password:
+            flash('Por favor, complete todos los campos.', 'danger')
+            return render_template('login.html')
         user = UsuarioDAO.login(dni, password)
         if user:
             session['usuario'] = {
@@ -56,4 +59,3 @@ def registro():
 def logout():
     session.clear()
     return redirect(url_for('auth.login'))
-

@@ -1,105 +1,75 @@
 {% extends 'base_dashboard.html' %}
 
-{% block panel_title %}{% endblock %}
-
 {% block content %}
-<div class="container" style="max-width: 1200px; margin: 0 auto;">
-  <div class="row">
-
-    <!-- Columna izquierda: contenido principal -->
-    <div class="col-lg-8">
-
-      <!-- Bienvenida -->
-      <div class="card p-4 shadow mb-5" style="background-color: white; border-radius: 16px;">
-        <h2 class="mb-2">👋 ¡Hola {{ nombre }}!</h2>
-        <p class="lead">Este es tu panel como profesor. Desde aquí podés gestionar tus clases, exámenes y alumnos.</p>
-      </div>
-
-      <!-- Estadísticas -->
-      <div class="row g-4 mb-5">
-        <div class="col-md-6 col-xl-6">
-          <div class="card text-white text-center p-3 shadow-sm" style="background-color: #0288d1;">
-            <h5>Materias asignadas</h5>
-            <h2>{{ materias_asignadas }}</h2>
-          </div>
-        </div>
-        <div class="col-md-6 col-xl-6">
-          <div class="card text-white text-center p-3 shadow-sm" style="background-color: #388e3c;">
-            <h5>Alumnos totales</h5>
-            <h2>{{ cantidad_alumnos }}</h2>
-          </div>
-        </div>
-        <div class="col-md-6 col-xl-6">
-          <div class="card text-white text-center p-3 shadow-sm" style="background-color: #f57c00;">
-            <h5>Exámenes próximos</h5>
-            <h2>{{ examenes_proximos }}</h2>
-          </div>
-        </div>
-        <div class="col-md-6 col-xl-6">
-          <div class="card text-white text-center p-3 shadow-sm" style="background-color: #7b1fa2;">
-            <h5>Horas semanales</h5>
-            <h2>{{ horas_dictado }}</h2>
-          </div>
-        </div>
-      </div>
-
-      <!-- Últimas acciones -->
-      <div class="card p-4 shadow mb-5" style="background-color: white; border-radius: 16px;">
-        <h4>🕒 Últimas acciones</h4>
-        <ul class="list-group list-group-flush mt-3">
-          {% for accion in acciones_profesor %}
-            <li class="list-group-item">{{ accion }}</li>
-          {% else %}
-            <li class="list-group-item text-muted">No hay acciones recientes.</li>
-          {% endfor %}
-        </ul>
-      </div>
-
-      <!-- Funciones principales -->
-      <div class="row g-4 mt-4">
-        <div class="col-md-4">
-          <a href="{{ url_for('profesor.crear_examen') }}" class="text-decoration-none">
-            <div class="card text-white text-center p-4 shadow-sm" style="background-color: #1976d2;">
-              <h5>➕ Crear Examen</h5>
-            </div>
-          </a>
-        </div>
-        <div class="col-md-4">
-          <a href="{{ url_for('profesor.cronograma_profesor') }}" class="text-decoration-none">
-            <div class="card text-white text-center p-4 shadow-sm" style="background-color: #0097a7;">
-              <h5>📅 Ver Cronograma</h5>
-            </div>
-          </a>
-        </div>
-        <div class="col-md-4">
-          <a href="{{ url_for('profesor.ver_notas') }}" class="text-decoration-none">
-            <div class="card text-white text-center p-4 shadow-sm" style="background-color: #43a047;">
-              <h5>📝 Ver Notas</h5>
-            </div>
-          </a>
-        </div>
-      </div>
-
+<div class="main-content">
+  <div class="dashboard-header">
+    <div class="dashboard-title-container">
+      <h1 class="dashboard-title">Panel del Profesor</h1>
+      <p class="dashboard-welcome">¡Hola{{ nombre and ', ' ~ nombre|capitalize }}! Gestioná tus clases, exámenes y alumnos desde aquí.</p>
     </div>
+    <div class="dashboard-divider"></div>
+    <p class="dashboard-sub">Accedé rápidamente a tus materias, exámenes, notas y comunicados.</p>
+  </div>
 
-    <!-- Columna derecha: comunicados -->
-    <div class="col-lg-4">
-      <div class="card p-4 shadow mb-5" style="background-color: white; border-radius: 16px;">
-        <h4>📩 Comunicados recientes</h4>
-        <ul class="list-group list-group-flush mt-3">
-          {% for comunicado in comunicados_profesor %}
-            <li class="list-group-item">
-              <strong>{{ comunicado.titulo }}</strong><br>
-              <small class="text-muted">{{ comunicado.fecha }}</small><br>
-              {{ comunicado.mensaje }}
-            </li>
-          {% else %}
-            <li class="list-group-item text-muted">No hay comunicados nuevos.</li>
-          {% endfor %}
-        </ul>
+  <div class="cards-wrapper">
+    <div class="cards-grid">
+      <div class="card stat materias">
+        <i class="bi bi-book-fill icon"></i>
+        <div class="label">Materias asignadas</div>
+        <div class="value">{{ materias_asignadas }}</div>
+      </div>
+      <div class="card stat alumnos">
+        <i class="bi bi-people-fill icon"></i>
+        <div class="label">Alumnos totales</div>
+        <div class="value">{{ cantidad_alumnos }}</div>
+      </div>
+      <div class="card stat examenes">
+        <i class="bi bi-journal-check icon"></i>
+        <div class="label">Exámenes próximos</div>
+        <div class="value">{{ examenes_proximos }}</div>
+      </div>
+      <div class="card stat profesores">
+        <i class="bi bi-clock-history icon"></i>
+        <div class="label">Horas semanales</div>
+        <div class="value">{{ horas_dictado }}</div>
       </div>
     </div>
+  </div>
 
+  <div class="quick-access">
+    <a href="{{ url_for('profesor.crear_examen') }}" class="btn quick"><i class="bi bi-plus-circle"></i>Crear Examen</a>
+    <a href="{{ url_for('profesor.cronograma_profesor') }}" class="btn quick"><i class="bi bi-calendar-event"></i>Ver Cronograma</a>
+    <a href="{{ url_for('profesor.ver_notas') }}" class="btn quick"><i class="bi bi-journal-text"></i>Ver Notas</a>
+  </div>
+
+  <div class="recent-actions">
+    <h4>Últimas acciones</h4>
+    <ul>
+      {% for accion in acciones_profesor %}
+        <li>
+          <span class="tag">{{ accion }}</span>
+        </li>
+      {% else %}
+        <li class="text-muted">No hay acciones recientes.</li>
+      {% endfor %}
+    </ul>
+  </div>
+
+  <div class="cards-wrapper" style="margin-top: 2rem;">
+    <div class="dashboard-header" style="background: none; box-shadow: none; padding: 0; margin-bottom: 0;">
+      <h4 style="margin-bottom: 18px;">Comunicados recientes</h4>
+    </div>
+    <ul class="list-group list-group-flush mt-3">
+      {% for comunicado in comunicados_profesor %}
+        <li class="list-group-item">
+          <strong>{{ comunicado.titulo }}</strong><br>
+          <small class="text-muted">{{ comunicado.fecha }}</small><br>
+          {{ comunicado.mensaje }}
+        </li>
+      {% else %}
+        <li class="list-group-item text-muted">No hay comunicados nuevos.</li>
+      {% endfor %}
+    </ul>
   </div>
 </div>
 {% endblock %}
