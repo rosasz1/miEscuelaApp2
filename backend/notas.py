@@ -4,26 +4,29 @@ import logging
 class NotasDAO:
 
     @staticmethod
-    def obtener_notas(dni):
+    def obtener_notas(dni_alumno):
         """
-        Devuelve una lista de notas con el nombre de la materia, p.ej.: ['Matematica (9.50)', 'Historia (8.00)', ...].
+        Devuelve una lista de dicts: [{'materia_id':..., 'materia_nombre':..., 'valor':...}, ...]
         """
         try:
             with Conexion.obtener_conexion() as conn:
                 with conn.cursor() as cursor:
                     cursor.execute(
                         """
-                        SELECT m.nombre AS materia_nombre, n.nota
+                        SELECT n.materia_id, m.nombre AS materia_nombre, n.nota
                         FROM public.notas n
                         JOIN public.materias m ON n.materia_id = m.id
                         WHERE n.usuario_id = (
                             SELECT id FROM public.usuarios WHERE dni = %s
                         )
                         """,
-                        (dni,)
+                        (dni_alumno,)
                     )
                     filas = cursor.fetchall()
-                    return [f"{materia} ({nota})" for materia, nota in filas] if filas else []
+                    return [
+                        {'materia_id': row[0], 'materia_nombre': row[1], 'valor': row[2]}
+                        for row in filas
+                    ]
         except Exception as e:
             logging.error(f"Error al obtener las notas: {e}")
             return []
@@ -91,3 +94,29 @@ class NotasDAO:
         except Exception as e:
             logging.error(f"Error al actualizar la nota: {e}")
             return {'mensaje': 'Error al actualizar la nota'}
+
+    @staticmethod
+    def eliminar_nota(dni_alumno, materia_id):
+        """
+        Elimina la nota para el alumno y materia especificados.
+        """
+        try:
+            with Conexion.obtener_conexion() as conn:
+                with conn.cursor() as cursor:
+                    cursor.execute(
+                        """
+                        DELETE FROM public.notas
+                        WHERE usuario_id = (
+                            SELECT id FROM public.usuarios WHERE dni = %s
+                        ) AND materia_id = %s
+                        """,
+                        (dni_alumno, materia_id)
+                    )
+                    if cursor.rowcount == 0:
+                        return {'mensaje': 'No existe nota previa para eliminar'}
+                    conn.commit()
+                    return {'mensaje': 'Nota eliminada exitosamente'}
+        except Exception as e:
+            logging.error(f"Error al eliminar la nota: {e}")
+            return {'mensaje': 'Error al eliminar la nota'}
+

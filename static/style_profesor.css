@@ -469,3 +469,116 @@ body, html, .d-flex, .main-content {
 .main-content::-webkit-scrollbar {
   display: none !important;               /* Chrome, Safari y Opera */
 }
+
+/* ==== Formularios y paneles funcionales ==== */
+.panel-funcion {
+  background: #fff;
+  border-radius: 13px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  max-width: 470px;
+  margin: 10px auto 0 auto;
+  padding: 26px 24px 22px 24px;
+}
+
+.panel-funcion h2, .panel-funcion h3 {
+  font-size: 1.38rem;
+  color: #0d736b;
+  text-align: center;
+  margin-bottom: 16px;
+  font-weight: 600;
+}
+
+.panel-funcion label {
+  font-size: 1rem;
+  color: #222;
+  margin-bottom: 7px;
+  display: block;
+}
+
+.panel-funcion input[type="text"],
+.panel-funcion input[type="number"] {
+  width: 100%;
+  border-radius: 8px;
+  border: 1px solid #b2ebf2;
+  padding: 9px 12px;
+  font-size: 1rem;
+  margin-bottom: 8px;
+  margin-top: 4px;
+}
+
+.panel-funcion input[type="text"]:focus,
+.panel-funcion input[type="number"]:focus {
+  border-color: #26a69a;
+  outline: none;
+}
+
+.panel-funcion .botones-form {
+  display: flex;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.btn-principal {
+  background: #17c9a4;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 9px 22px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.17s;
+}
+.btn-principal:hover {
+  background: #11967c;
+}
+
+.btn-secundario {
+  background: #f4f7fa;
+  color: #11967c;
+  border-radius: 8px;
+  padding: 9px 16px;
+  font-size: 0.99rem;
+  border: none;
+  transition: background 0.16s;
+}
+.btn-secundario:hover {
+  background: #e0f2f1;
+  color: #0d736b;
+}
+
+/* ==== Tablas limpias ==== */
+.tabla-funcion {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 16px;
+  background: #fafbfc;
+  border-radius: 7px;
+  overflow: hidden;
+  box-shadow: 0 1px 8px rgba(64,196,255,0.07);
+}
+
+.tabla-funcion th, .tabla-funcion td {
+  padding: 11px 13px;
+  text-align: center;
+  border-bottom: 1px solid #e0f2f1;
+}
+
+.tabla-funcion th {
+  background: #e0f7fa;
+  color: #11967c;
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.tabla-funcion tr:last-child td {
+  border-bottom: none;
+}
+
+/* Mensaje vacío o error */
+.mensaje-vacio {
+  color: #d32f2f;
+  text-align: center;
+  margin-top: 16px;
+  font-size: 1rem;
+}

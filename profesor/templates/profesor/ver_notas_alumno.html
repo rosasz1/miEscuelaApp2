@@ -3,43 +3,76 @@
 {% block panel_title %}Ver Notas de un Alumno{% endblock %}
 
 
+
 {% block content %}
-<h4>Consultar notas de un alumno</h4>
-<form method="POST" action="{{ url_for('profesor.ver_notas') }}">
-  <div class="form-group">
-    <label for="dni_alumno">DNI del alumno:</label>
-    <input type="text" name="dni_alumno" id="dni_alumno" required class="form-control">
+<div class="panel-funcion">
+  <div style="text-align:center; margin-bottom:10px; color:#1976d2; font-size:2.2rem;">
+    <i class="bi bi-journal-text"></i>
   </div>
-  <button type="submit" class="btn btn-primary mt-3">Buscar</button>
-</form>
+  <h2>Ver, modificar y eliminar notas de un alumno</h2>
+  <form method="POST" action="{{ url_for('profesor.ver_notas') }}">
+    <label for="dni_alumno">DNI del alumno:</label>
+    <input type="text" name="dni_alumno" id="dni_alumno" autocomplete="off" required value="{{ dni_alumno or '' }}">
+    <div class="botones-form">
+      <button type="submit" class="btn-principal">
+        <i class="bi bi-search"></i> Buscar
+      </button>
+      <a href="{{ url_for('profesor.dashboard') }}" class="btn-secundario">
+        <i class="bi bi-arrow-left"></i> Volver al panel
+      </a>
+    </div>
+  </form>
 
-{% if notas is not none %}
-  <hr>
-  <h5>Notas encontradas:</h5>
-  {% if notas %}
-    <table class="table table-bordered table-hover">
-      <thead class="table-light">
-        <tr>
-          <th>Materia</th>
-          <th>Nota</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for nota in notas %}
+  {% if notas is not none %}
+    {% if notas %}
+      <form method="get" action="{{ url_for('profesor.ver_notas') }}">
+        <input type="hidden" name="dni_alumno" value="{{ dni_alumno }}">
+        <label for="filtro_materia">Filtrar por materia:</label>
+        <select name="filtro_materia" id="filtro_materia" onchange="this.form.submit()">
+          <option value="">Todas</option>
+          {% for materia in materias %}
+            <option value="{{ materia.id }}" {% if filtro_materia == materia.id|string %}selected{% endif %}>
+              {{ materia.nombre }}
+            </option>
+          {% endfor %}
+        </select>
+      </form>
+      <table class="tabla-funcion">
+        <thead>
           <tr>
-            <td>{{ nota.split('(')[0].strip() }}</td>
-            <td>{{ nota.split('(')[1].replace(')', '') }}</td>
+            <th>Materia</th>
+            <th>Nota</th>
+            <th>Modificar</th>
+            <th>Eliminar</th>
           </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  {% else %}
-    <p>No se encontraron notas para ese alumno.</p>
+        </thead>
+        <tbody>
+          {% for nota in notas %}
+            <tr>
+              <td>{{ nota.materia_nombre }}</td>
+              <td>{{ nota.valor }}</td>
+              <td>
+                <form method="POST" action="{{ url_for('profesor.modificar_nota') }}" style="display:inline;">
+                  <input type="hidden" name="dni_alumno" value="{{ dni_alumno }}">
+                  <input type="hidden" name="materia_id" value="{{ nota.materia_id }}">
+                  <input type="number" name="nueva_nota" value="{{ nota.valor }}" min="1" max="10" step="0.01" required style="width:60px;">
+                  <button type="submit" class="btn-principal" style="padding:4px 12px;">Guardar</button>
+                </form>
+              </td>
+              <td>
+                <form method="POST" action="{{ url_for('profesor.eliminar_nota') }}" style="display:inline;" onsubmit="return confirm('¿Seguro que querés eliminar esta nota?');">
+                  <input type="hidden" name="dni_alumno" value="{{ dni_alumno }}">
+                  <input type="hidden" name="materia_id" value="{{ nota.materia_id }}">
+                  <button type="submit" class="btn-secundario" style="padding:4px 12px; background:#e57373; color:white;">Eliminar</button>
+                </form>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+      <p class="mensaje-vacio">No se encontraron notas para ese alumno.</p>
+    {% endif %}
   {% endif %}
-{% endif %}
-
-<div class="mt-3">
-  <a href="{{ url_for('profesor.dashboard') }}" class="btn btn-secondary">&larr; Volver al panel</a>
 </div>
 {% endblock %}
-

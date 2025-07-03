@@ -1,4 +1,4 @@
-
+from backend.notas import NotasDAO
 from backend.examenDAO import ExamenDAO
 from flask import Blueprint, render_template, request, redirect, url_for, session, flash
 from backend.usuarioDAO import UsuarioDAO
@@ -33,42 +33,101 @@ def dashboard():
 # ========================
 # 📝 NOTAS
 # ========================
-@profesor_bp.route('/notas', methods=['GET', 'POST'])
+@profesor_bp.route('/ver-notas', methods=['GET', 'POST'])
 def ver_notas():
-    if not validar_rol('profesor'):
-        return redireccion_no_autorizado()
     notas = None
-    if request.method == 'POST':
-        dni_alumno = request.form['dni_alumno']
-        profesor_dni = session['usuario']['dni']
-        notas = UsuarioDAO.obtener_notas_por_profesor(profesor_dni, dni_alumno)
-    return render_template("profesor/ver_notas_alumno.html", notas=notas)
+    materias = []
+    filtro_materia = None
+    dni_alumno = None
 
+    if request.method == 'POST':
+        dni_alumno = request.form.get('dni_alumno', '').strip()
+        filtro_materia = request.form.get('filtro_materia')
+    else:
+        dni_alumno = request.args.get('dni_alumno', '').strip()
+        filtro_materia = request.args.get('filtro_materia')
+
+    if dni_alumno:
+        notas_crudas = NotasDAO.obtener_notas(dni_alumno)
+        materias = UsuarioDAO.obtener_materias_asignadas_alumno(dni_alumno)
+        print("notas_crudas:", notas_crudas)
+        print("filtro_materia:", filtro_materia)
+        print("materia_ids:", [n['materia_id'] for n in notas_crudas])
+
+        if filtro_materia:
+            # El filtro robusto para cualquier combinación de tipos
+            notas = [n for n in notas_crudas if str(n['materia_id']).strip() == str(filtro_materia).strip()]
+        else:
+            notas = notas_crudas
+    else:
+        notas = None
+
+    return render_template(
+        "profesor/ver_notas_alumno.html",
+        notas=notas,
+        materias=materias,
+        filtro_materia=filtro_materia,
+        dni_alumno=dni_alumno
+    )
 @profesor_bp.route('/agregar-nota', methods=['GET', 'POST'])
 def agregar_nota():
     if not validar_rol('profesor'):
         return redireccion_no_autorizado()
-    if request.method == 'POST':
-        dni_alumno = request.form['dni_alumno']
-        materia_id = request.form['materia_id']
-        nota = request.form['nota']
-        resultado = UsuarioDAO.agregar_nota(session['usuario']['dni'], dni_alumno, nota, materia_id)
-        flash(resultado.get('mensaje', 'Error'))
-        return redirect(url_for('profesor.dashboard'))
-    return render_template("profesor/agregar_nota.html")
 
-@profesor_bp.route('/actualizar-nota', methods=['GET', 'POST'])
-def actualizar_nota():
+    materias = None
+    dni_alumno = None
+
+    if request.method == 'POST':
+        dni_alumno = request.form.get('dni_alumno', '').strip()
+        materia_id = request.form.get('materia_id')
+        titulo_nota = request.form.get('titulo_nota')
+        nota = request.form.get('nota')
+
+        # Si ya seleccionó materia y nota, guardar la nota
+        if materia_id and nota and titulo_nota:
+            resultado = UsuarioDAO.agregar_nota(
+                session['usuario']['dni'],
+                dni_alumno,
+                nota,
+                materia_id,
+                titulo_nota=titulo_nota
+            )
+            flash(resultado.get('mensaje', 'Nota agregada exitosamente'))
+            # Vuelve a mostrar el form, no redirecciona
+            materias = UsuarioDAO.obtener_materias_asignadas_alumno(dni_alumno)
+        # Si solo mandó DNI, buscar materias asignadas
+        elif dni_alumno:
+            materias = UsuarioDAO.obtener_materias_asignadas_alumno(dni_alumno)
+            if not materias:
+                flash("El alumno no tiene materias asignadas o el DNI es incorrecto.")
+
+    return render_template(
+        "profesor/agregar_nota.html",
+        materias=materias,
+        dni_alumno=dni_alumno
+    )
+
+@profesor_bp.route('/eliminar-nota', methods=['POST'])
+def eliminar_nota():
     if not validar_rol('profesor'):
         return redireccion_no_autorizado()
-    if request.method == 'POST':
-        dni_alumno = request.form['dni_alumno']
-        materia_id = request.form['materia_id']
-        nueva_nota = request.form['nueva_nota']
-        resultado = UsuarioDAO.actualizar_nota(session['usuario']['dni'], dni_alumno, nueva_nota, materia_id)
-        flash(resultado.get('mensaje', 'Error'))
-        return redirect(url_for('profesor.dashboard'))
-    return render_template("profesor/actualizar_nota.html")
+    dni_alumno = request.form.get('dni_alumno')
+    materia_id = request.form.get('materia_id')
+    resultado = UsuarioDAO.eliminar_nota(dni_alumno, materia_id)
+    flash(resultado.get('mensaje', 'Error'))
+    return redirect(url_for('profesor.ver_notas', dni_alumno=dni_alumno))
+
+@profesor_bp.route('/modificar-nota', methods=['POST'])
+def modificar_nota():
+    if not validar_rol('profesor'):
+        return redireccion_no_autorizado()
+    dni_editor = session['usuario']['dni']
+    dni_alumno = request.form.get('dni_alumno')
+    materia_id = request.form.get('materia_id')
+    nueva_nota = request.form.get('nueva_nota')
+    resultado = UsuarioDAO.actualizar_nota(dni_editor, dni_alumno, nueva_nota, materia_id)
+    flash(resultado.get('mensaje', 'Error'))
+    return redirect(url_for('profesor.ver_notas', dni_alumno=dni_alumno))
 
 # ========================
 # 📋 ASISTENCIAS

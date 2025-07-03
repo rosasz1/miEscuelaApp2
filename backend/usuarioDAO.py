@@ -114,6 +114,11 @@ class UsuarioDAO:
             return {'mensaje': 'Error al actualizar nota'}
 
     @staticmethod
+    def eliminar_nota(dni_alumno, materia_id):
+        return NotasDAO.eliminar_nota(dni_alumno, materia_id)
+
+
+    @staticmethod
     def obtener_asistencias(dni_alumno):
         try:
             return AsistenciasDAO.obtener_asistencias(dni_alumno) or []
@@ -166,7 +171,25 @@ class UsuarioDAO:
             print(f"Error al obtener cursos: {e}")
             return []
 
-
+    @staticmethod
+    def obtener_materias_asignadas_alumno(dni_alumno):
+        try:
+            print(f"Buscando materias para DNI: '{dni_alumno}'")  # PRINT
+            with Conexion.obtener_conexion() as conn:
+                with conn.cursor() as cursor:
+                    cursor.execute("""
+                        SELECT m.id, m.nombre
+                        FROM materias m
+                        JOIN usuarios u ON m.curso_id = u.curso_id
+                        WHERE u.dni = %s AND u.rol = 'alumno'
+                        ORDER BY m.nombre
+                    """, (dni_alumno,))
+                    materias = [{'id': row[0], 'nombre': row[1]} for row in cursor.fetchall()]
+                    print(f"Materias encontradas: {materias}")  # PRINT
+                    return materias
+        except Exception as e:
+            logging.error(f"Error al obtener materias asignadas al alumno: {e}")
+            return []
 
 
 
